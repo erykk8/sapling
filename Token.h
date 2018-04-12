@@ -3,7 +3,7 @@
 
 class Token {
     public:
-        enum Type   { IF, ELSE, RETURN, RETURN_ARROW, COMMA,
+        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
                         TYPE_KEYWORD,
                         LOGICAL_OPERATOR,
                         INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
@@ -14,10 +14,11 @@ class Token {
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
                         SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
-                        EOL, EOF
+                        EOL, EOT
                     };
         Token();
-        Token(Type type) : type(type) {}
+        Token(Type type);
+        ~Token();
 
         Type getType() const;
         int getInt() const;
@@ -29,6 +30,7 @@ class Token {
         void setBool(bool value);
         void setReal(double value);
         void setString(std::string value);
+
     private:
         int line;
         int position;
@@ -37,7 +39,7 @@ class Token {
             int integer;
             bool boolean;
             double real;
-            std::string string;
-        } value;
+        };
+        std::string string; // lazy
 
 };

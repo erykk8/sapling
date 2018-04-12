@@ -1,5 +1,6 @@
 #pragma once
 #include <Token.h>
+#include <IO.h>
 
 class Scanner {
     public:
@@ -7,7 +8,10 @@ class Scanner {
         Token getNextToken();
     private:
         bool tryKeyword();
-        bool trySpecialCharacter();
+        bool tryReturnArrow();
+        bool tryBraces();
+        bool tryConstant();
+        bool trySeparator();
         bool tryOperator();
         bool tryIdentifier();
 
