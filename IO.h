@@ -3,8 +3,9 @@
 #include <fstream>
 #include <string>
 #include <functional>
+#include <memory>
 
-#define EOT 4
+#define IO_EOT 4
 #define MAX_LINE_LENGTH 8192
 
 class InputReader {
@@ -16,10 +17,10 @@ class InputReader {
 
 class StreamReader: public InputReader {
     public:
-        StreamReader(std::istream& stream) : stream(stream) {}
+        StreamReader(std::shared_ptr<std::istream> stream) : stream(stream) {}
         char nextChar();
         void skipLine();
         void skip(std::function<bool(char)> predicate);
     private:
-        std::istream& stream;
+        std::shared_ptr<std::istream> stream;
 };

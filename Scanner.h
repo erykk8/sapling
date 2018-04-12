@@ -1,10 +1,11 @@
 #pragma once
-#include <Token.h>
-#include <IO.h>
+#include "Token.h"
+#include "IO.h"
+#include <memory>
 
 class Scanner {
     public:
-        Scanner(InputReader& reader);
+        Scanner(std::shared_ptr<InputReader> reader);
         Token getNextToken();
     private:
         bool tryKeyword();
@@ -20,4 +21,5 @@ class Scanner {
         void throwUnknownToken();
 
         Token currentToken;
+        std::shared_ptr<InputReader> reader;
 };
