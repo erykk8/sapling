@@ -31,6 +31,10 @@ class Token {
         void setReal(double value);
         void setString(std::string value);
 
+        bool operator==(const Type type) const;
+        bool operator!=(const Type type) const;
+        operator Type() const { return type; }
+
     private:
         int line;
         int position;

@@ -42,3 +42,11 @@ void Token::setString(std::string value) {
     type = Token::STRING_VALUE;
     string = value;
 }
+
+bool Token::operator==(const Type type) const {
+    return this->type == type;
+}
+
+bool Token::operator!=(const Type type) const {
+    return this->type != type;
+}
