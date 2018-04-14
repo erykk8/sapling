@@ -7,6 +7,11 @@ char StreamReader::nextChar() {
     else return IO_EOT;
 }
 
+char StreamReader::peekChar() {
+    if(stream->peek() > 0) return stream->peek();
+    else return IO_EOT;
+}
+
 void StreamReader::skipLine() {
     stream->ignore(MAX_LINE_LENGTH, '\n');
 }

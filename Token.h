@@ -3,7 +3,7 @@
 
 class Token {
     public:
-        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
+        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA, COLON,
                         TYPE_KEYWORD,
                         LOGICAL_OPERATOR,
                         INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
@@ -30,6 +30,8 @@ class Token {
         void setBool(bool value);
         void setReal(double value);
         void setString(std::string value);
+
+        void setOtherValue(std::string value);
 
         bool operator==(const Type type) const;
         bool operator!=(const Type type) const;

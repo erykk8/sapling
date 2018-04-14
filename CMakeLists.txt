@@ -3,7 +3,7 @@ project(Sapling)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(SaplingLib IO.cpp Token.cpp)
+add_library(SaplingLib IO.cpp Token.cpp Scanner.cpp)
 
 add_executable(Sapling main.cpp)
 target_link_libraries(Sapling SaplingLib)

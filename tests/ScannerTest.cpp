@@ -24,6 +24,7 @@ BOOST_AUTO_TEST_CASE(empty_input_returns_EOT) {
 
 BOOST_AUTO_TEST_CASE(last_token_is_EOT) {
     Scanner s = makeScannerFromString("Int");
+    s.getNextToken();
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }
 
