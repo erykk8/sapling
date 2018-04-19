@@ -5,8 +5,8 @@
 #include <sstream>
 #include <memory>
 #include <vector>
-#include "../IO.h"
-#include "../Scanner.h"
+#include "../scanner/IO.h"
+#include "../scanner/Scanner.h"
 
 Scanner makeScannerFromString(std::string string) {
     std::shared_ptr<std::stringstream> ss(new std::stringstream());

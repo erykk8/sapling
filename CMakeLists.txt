@@ -1,31 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(Sapling)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(SaplingLib IO.cpp Token.cpp Scanner.cpp)
+add_library(Token "")
+add_library(Scanner "")
+
+include(token/CMakeLists.txt)
+include(scanner/CMakeLists.txt)
+include(tests/CMakeLists.txt)
 
 add_executable(Sapling main.cpp)
-target_link_libraries(Sapling SaplingLib)
-
-enable_testing()
-
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-include_directories (${Boost_INCLUDE_DIRS})
-
-file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp)
-
-foreach(testSrc ${TEST_SRCS})
-        get_filename_component(testName ${testSrc} NAME_WE)
-
-        add_executable(${testName} ${testSrc})
-
-        target_link_libraries(${testName} ${Boost_LIBRARIES} SaplingLib)
-
-        set_target_properties(${testName} PROPERTIES 
-            RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/tests/bin)
-
-        add_test(NAME ${testName} 
-                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/bin
-                 COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/bin/${testName} )
-endforeach(testSrc)
+target_link_libraries(Sapling Token Scanner)

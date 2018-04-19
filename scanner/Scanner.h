@@ -1,5 +1,5 @@
 #pragma once
-#include "Token.h"
+#include "../token/Token.h"
 #include "IO.h"
 #include <memory>
 #include <functional>
@@ -20,13 +20,13 @@ class Scanner {
             return (c >= ' ' && c <= '~' && c != '"');
         };
 
-        bool tryKeywordOrIdentifier();
-        bool tryReturnArrowComparisonAssignment();
-        bool tryBraces();
-        bool tryConstant();
-        bool trySeparator();
-        bool tryOperator();
-        bool tryEot();
+        bool alphaToken();
+        bool equalsCharacterToken();
+        bool braceToken();
+        bool valueToken();
+        bool separatorToken();
+        bool operatorToken();
+        bool eotToken();
 
         void readNextToken();
 

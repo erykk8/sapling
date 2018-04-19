@@ -4,7 +4,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <sstream>
-#include "../IO.h"
+#include "../scanner/IO.h"
 
 StreamReader makeStreamReaderFromString(std::string string) {
     std::shared_ptr<std::stringstream> ss(new std::stringstream());

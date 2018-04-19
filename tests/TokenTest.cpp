@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "TokenTest"
 #include <boost/test/unit_test.hpp>
-#include "../Token.h"
+#include "../token/Token.h"
 
 BOOST_AUTO_TEST_SUITE(TokenTest)
 
