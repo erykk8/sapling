@@ -119,16 +119,11 @@ BOOST_AUTO_TEST_CASE(identifiers) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(proper_one_liner_if_else) {
-    Scanner s = makeScannerFromString("if(x > 4) something\nelse something");
-    std::vector<Token::Type> v = { Token::IF, Token::BRACE_OPEN, Token::IDENTIFIER,
-                                    Token::COMPARISON_OPERATOR, Token::INT_VALUE,
-                                    Token::BRACE_CLOSE, Token::IDENTIFIER, Token::EOL,
-                                    Token::ELSE, Token::IDENTIFIER };
-
-    for(auto type : v) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), type);
-    }
+BOOST_AUTO_TEST_CASE(skip_comments) {
+    Scanner s = makeScannerFromString("Int x\n# a comment\n# another comment");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::TYPE_KEYWORD);
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::IDENTIFIER);
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

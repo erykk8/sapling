@@ -11,17 +11,18 @@ Token Scanner::getNextToken() {
 void Scanner::readNextToken() {
     reader->skip(whiteSpace);
 
+    while(reader->peekChar() == '#') {
+        reader->skipLine();
+        reader->skip(whiteSpace);
+    }
+
     if (tryEot()) {
         currentToken = Token::EOT;
         return;
     }
 
-    while(reader->peekChar() == '#') {
-        reader->skipLine();
-    }
-
     if (tryKeywordOrIdentifier() || tryBraces() || trySeparator() || tryConstant()
-        || tryOperator() || tryReturnArrowComparisonAssignment() || tryNewline() )
+        || tryOperator() || tryReturnArrowComparisonAssignment() )
         return;
 
     throwUnknownToken();
@@ -38,18 +39,6 @@ void Scanner::throwUnknownToken() {
 void Scanner::throwInvalidString() {
     const std::string msg = "Invalid character in string constant: ";
     throw std::runtime_error(msg + static_cast<char>(reader->peekChar()));
-}
-
-bool Scanner::tryNewline() {
-    if(reader->peekChar() == '\n') {
-        while(reader->peekChar() == '\n') { // squash multiple newline chars into one
-            reader->nextChar();
-            reader->skip(whiteSpace);
-        }
-        currentToken = Token::EOL;
-        return true;
-    }
-    return false;
 }
 
 bool Scanner::tryKeywordOrIdentifier() {

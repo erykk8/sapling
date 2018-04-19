@@ -9,7 +9,7 @@ class Scanner {
         Scanner(std::shared_ptr<InputReader> reader);
         Token getNextToken();
     private:
-        std::function<bool(char)> whiteSpace = [](char c) -> bool { return c <= ' ' && c != '\n'; };
+        std::function<bool(char)> whiteSpace = [](char c) -> bool { return c <= ' '; };
         std::function<bool(char)> alphanumericOrUnderscore = [](char c) -> bool { 
             return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
         };
@@ -27,7 +27,6 @@ class Scanner {
         bool trySeparator();
         bool tryOperator();
         bool tryEot();
-        bool tryNewline();
 
         void readNextToken();
 

@@ -14,7 +14,7 @@ class Token {
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
                         SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
-                        EOL, EOT
+                        EOT
                     };
         Token();
         Token(Type type);
