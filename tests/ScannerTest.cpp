@@ -126,4 +126,12 @@ BOOST_AUTO_TEST_CASE(skip_comments) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }
 
+BOOST_AUTO_TEST_CASE(fail_to_parse_unused_characters) {
+    std::vector<std::string> chars = {"@", "%", "\\", "&", "|", "?", "~", "`", "'", "$", ";"};
+    for (auto character: chars) {
+        Scanner s = makeScannerFromString(character);
+        BOOST_CHECK_THROW(s.getNextToken(), std::runtime_error);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
