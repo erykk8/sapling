@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(last_token_is_EOT) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }
 
-BOOST_AUTO_TEST_CASE(only_if_elif_else) {
+BOOST_AUTO_TEST_CASE(if_elif_else) {
     Scanner s = makeScannerFromString("if elif else");
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::IF);
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::ELIF);
@@ -53,6 +53,11 @@ BOOST_AUTO_TEST_CASE(return_arrow) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::RETURN_ARROW);
 }
 
+BOOST_AUTO_TEST_CASE(return_keyword) {
+    Scanner s = makeScannerFromString("return");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::RETURN);
+}
+
 BOOST_AUTO_TEST_CASE(int_constants) {
     Scanner s = makeScannerFromString("34 -129");
     Token t1 = s.getNextToken();
@@ -62,6 +67,43 @@ BOOST_AUTO_TEST_CASE(int_constants) {
     BOOST_CHECK_EQUAL(t1.getInt(), 34);
     BOOST_CHECK_EQUAL(t2.getType(), Token::INT_VALUE);
     BOOST_CHECK_EQUAL(t2.getInt(), -129);
+}
+
+BOOST_AUTO_TEST_CASE(bool_constants) {
+    Scanner s = makeScannerFromString("True False");
+
+    Token t = s.getNextToken();
+    Token f = s.getNextToken();
+
+    BOOST_CHECK_EQUAL(t, Token::BOOL_VALUE);
+    BOOST_CHECK_EQUAL(t.getBool(), true);
+    BOOST_CHECK_EQUAL(f, Token::BOOL_VALUE);
+    BOOST_CHECK_EQUAL(f.getBool(), false);
+}
+
+BOOST_AUTO_TEST_CASE(real_constants) {
+    std::vector<double> reals = {10.3333333333, -0.03, -25.123, 0.75};
+    std::stringstream ss;
+    for (auto real: reals) {
+        ss << real << " ";
+    }
+    Scanner s = makeScannerFromString(ss.str());
+
+    for (auto real: reals) {
+        Token t = s.getNextToken();
+        BOOST_CHECK_EQUAL(t, Token::REAL_VALUE);
+        BOOST_CHECK(abs(t.getReal() - real) < 0.001); // cant precisely compare doubles
+    }
+}
+
+BOOST_AUTO_TEST_CASE(string_constants) {
+    std::string text = "a string";
+    Scanner s = makeScannerFromString("\"" + text + "\"");
+
+    Token str = s.getNextToken();
+
+    BOOST_CHECK_EQUAL(str, Token::STRING_VALUE);
+    BOOST_CHECK_EQUAL(str.getString(), text);
 }
 
 BOOST_AUTO_TEST_CASE(braces) {
@@ -76,14 +118,10 @@ BOOST_AUTO_TEST_CASE(braces) {
 
 }
 
-BOOST_AUTO_TEST_CASE(variable_assignment) {
-    Scanner s = makeScannerFromString("Int x = 413");
-    std::vector<Token::Type> v = { Token::TYPE_KEYWORD, Token::IDENTIFIER,
-                                    Token::ASSIGNMENT_OPERATOR, Token::INT_VALUE };
-
-    for(auto type : v) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), type);
-    }
+BOOST_AUTO_TEST_CASE(assignment_operator) {
+    Scanner s = makeScannerFromString(" = ");
+    
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::ASSIGNMENT_OPERATOR);
 }
 
 BOOST_AUTO_TEST_CASE(arithmetic_operators) {
@@ -117,6 +155,13 @@ BOOST_AUTO_TEST_CASE(identifiers) {
     for(int i = 0; i < 3; ++i) {
         BOOST_CHECK_EQUAL(s.getNextToken(), Token::IDENTIFIER);
     }
+}
+
+BOOST_AUTO_TEST_CASE(separators) {
+    Scanner s = makeScannerFromString(", :");
+
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::COMMA);
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::COLON);
 }
 
 BOOST_AUTO_TEST_CASE(skip_comments) {
