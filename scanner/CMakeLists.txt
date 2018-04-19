@@ -5,6 +5,7 @@ target_sources(Scanner
         "${CMAKE_CURRENT_LIST_DIR}/EqualsToken.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/OperatorToken.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/ValueToken.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Predicates.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/IO.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/Scanner.cpp"
     PUBLIC
