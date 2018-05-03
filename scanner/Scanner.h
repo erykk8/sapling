@@ -9,10 +9,10 @@ class Scanner {
         Scanner(std::shared_ptr<InputReader> reader);
         Token getNextToken();
     private:
-        static std::function<bool(char)> whiteSpace;
-        static std::function<bool(char)> alphanumericOrUnderscore;
-        static std::function<bool(char)> digit;
-        static std::function<bool(char)> stringable;
+        static std::function<bool(int)> whiteSpace;
+        static std::function<bool(int)> alphanumericOrUnderscore;
+        static std::function<bool(int)> digit;
+        static std::function<bool(int)> stringable;
 
         bool alphaToken();
         bool equalsCharacterToken();

@@ -16,8 +16,8 @@ BOOST_AUTO_TEST_SUITE(IOTest)
 
 BOOST_AUTO_TEST_CASE(next_char_on_empty_string_returns_eot) {
     StreamReader sr = makeStreamReaderFromString("");
-    BOOST_CHECK_EQUAL(sr.peekChar(), IO_EOT);
-    BOOST_CHECK_EQUAL(sr.nextChar(), IO_EOT);
+    BOOST_CHECK_EQUAL(sr.peekChar(), -1);
+    BOOST_CHECK_EQUAL(sr.nextChar(), -1);
 }
 
 BOOST_AUTO_TEST_CASE(next_char_on_string_returns_first_char) {

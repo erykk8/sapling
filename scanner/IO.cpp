@@ -1,19 +1,21 @@
 #include "IO.h"
 #include <exception>
+#include <limits>
+#include <ios>
 
-char StreamReader::nextChar() {
+int StreamReader::nextChar() {
     char c;
     if(stream->get(c)) return c;
-    else return IO_EOT;
+    else return -1;
 }
 
-char StreamReader::peekChar() {
+int StreamReader::peekChar() {
     if(stream->peek() > 0) return stream->peek();
-    else return IO_EOT;
+    else return -1;
 }
 
 void StreamReader::skipLine() {
-    stream->ignore(MAX_LINE_LENGTH, '\n');
+    stream->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 void StreamReader::skip(std::function<bool(char)> predicate) {

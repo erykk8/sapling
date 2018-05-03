@@ -46,9 +46,6 @@ bool Scanner::separatorToken() {
         case ',':
             currentToken = Token::COMMA;
             break;
-        case ':':
-            currentToken = Token::COLON;
-            break;
         default:
             return false;
     }
@@ -57,7 +54,7 @@ bool Scanner::separatorToken() {
 }
 
 bool Scanner::eotToken() {
-    return reader->peekChar() == IO_EOT;
+    return reader->peekChar() == -1;
 }
 
 

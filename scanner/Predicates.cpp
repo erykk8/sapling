@@ -1,16 +1,15 @@
 #include "Scanner.h"
 #include <functional>
+#include <cctype>
 
-std::function<bool(char)> Scanner::whiteSpace = [](char c) -> bool { return c <= ' '; };
+std::function<bool(int)> Scanner::whiteSpace = isspace;
         
-std::function<bool(char)> Scanner::alphanumericOrUnderscore = [](char c) -> bool { 
+std::function<bool(int)> Scanner::alphanumericOrUnderscore = [](int c) -> bool { 
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
 };
 
-std::function<bool(char)> Scanner::digit = [](char c) -> bool { 
-            return (c >= '0' && c <= '9');
-        };
+std::function<bool(int)> Scanner::digit = isdigit;
 
-std::function<bool(char)> Scanner::stringable = [](char c) -> bool { 
+std::function<bool(int)> Scanner::stringable = [](int c) -> bool { 
     return (c >= ' ' && c <= '~' && c != '"');
 };

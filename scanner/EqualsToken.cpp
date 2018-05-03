@@ -15,7 +15,7 @@ bool Scanner::equalsCharacterToken() {
                 break;
             case '=':
                 reader->nextChar();
-                currentToken = Token::COMPARISON_OPERATOR;
+                currentToken = Token::EQUAL;
                 buf << c;
                 break;
             default:

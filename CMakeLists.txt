@@ -3,12 +3,12 @@ project(Sapling)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(Token "")
+add_library(Grammar "")
 add_library(Scanner "")
 
-include(token/CMakeLists.txt)
+include(grammar/CMakeLists.txt)
 include(scanner/CMakeLists.txt)
 include(tests/CMakeLists.txt)
 
 add_executable(Sapling main.cpp)
-target_link_libraries(Sapling Token Scanner)
+target_link_libraries(Sapling Grammar Scanner)

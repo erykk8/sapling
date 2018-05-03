@@ -5,14 +5,29 @@ bool Scanner::operatorToken() {
     std::stringstream buf;
     switch(reader->peekChar()) {
         case '>':
-        case '<':
-        case '!':
-            currentToken = Token::COMPARISON_OPERATOR;
+            currentToken = Token::GREATER_THAN;
             buf << reader->nextChar();
             if(reader->peekChar() == '=') {
+                currentToken = Token::GREATER_EQUAL;
                 buf << reader->nextChar();
             }
             break;
+        case '<':
+            currentToken = Token::LESS_THAN;
+            buf << reader->nextChar();
+            if(reader->peekChar() == '=') {
+                currentToken = Token::LESS_EQUAL;
+                buf << reader->nextChar();
+            }
+            break;
+        case '!':
+            currentToken = Token::NOT_EQUAL;
+            buf << reader->nextChar();
+            if(reader->peekChar() == '=') {
+                buf << reader->nextChar();
+                break;
+            }
+            else return false;
         case '*':
             currentToken = Token::MULTIPLY;
             buf << reader->nextChar();

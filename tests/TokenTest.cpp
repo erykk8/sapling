@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "TokenTest"
 #include <boost/test/unit_test.hpp>
-#include "../token/Token.h"
+#include "../grammar/Token.h"
 
 BOOST_AUTO_TEST_SUITE(TokenTest)
 
@@ -11,9 +11,9 @@ BOOST_AUTO_TEST_CASE(get_type_after_default_constructor_returns_eot) {
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_type_constructor_returns_given_type) {
-    Token t1(Token::CURLY_BRACE_OPEN), t2(Token::COMPARISON_OPERATOR), t3(Token::INT_TYPE);
+    Token t1(Token::CURLY_BRACE_OPEN), t2(Token::LESS_THAN), t3(Token::INT_TYPE);
     BOOST_CHECK_EQUAL(t1.getType(), Token::CURLY_BRACE_OPEN);
-    BOOST_CHECK_EQUAL(t2.getType(), Token::COMPARISON_OPERATOR);
+    BOOST_CHECK_EQUAL(t2.getType(), Token::LESS_THAN);
     BOOST_CHECK_EQUAL(t3.getType(), Token::INT_TYPE);
 }
 

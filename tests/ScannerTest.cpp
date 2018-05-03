@@ -1,6 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "ScannerTest"
 #include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 
 #include <sstream>
 #include <memory>
@@ -8,14 +9,14 @@
 #include "../scanner/IO.h"
 #include "../scanner/Scanner.h"
 
+BOOST_AUTO_TEST_SUITE(ScannerTest)
+
 Scanner makeScannerFromString(std::string string) {
     std::shared_ptr<std::stringstream> ss(new std::stringstream());
     *ss << string;
     std::shared_ptr<StreamReader> sr(new StreamReader(ss));
     return Scanner(sr);
 }
-
-BOOST_AUTO_TEST_SUITE(ScannerTest)
 
 BOOST_AUTO_TEST_CASE(empty_input_returns_EOT) {
     Scanner s = makeScannerFromString("");
@@ -28,29 +29,49 @@ BOOST_AUTO_TEST_CASE(last_token_is_EOT) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }
 
-BOOST_AUTO_TEST_CASE(if_elif_else) {
-    Scanner s = makeScannerFromString("if elif else");
+BOOST_AUTO_TEST_CASE(ignore_leading_whitespace) {
+    Scanner s = makeScannerFromString("     \t\t\t     ");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
+}
+
+BOOST_AUTO_TEST_CASE(if_keyword) {
+    Scanner s = makeScannerFromString("if");
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::IF);
+}
+
+BOOST_AUTO_TEST_CASE(elif_keyword) {
+    Scanner s = makeScannerFromString("elif");
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::ELIF);
+}
+
+BOOST_AUTO_TEST_CASE(else_keyword) {
+    Scanner s = makeScannerFromString("else");
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::ELSE);
 }
 
-BOOST_AUTO_TEST_CASE(type_keywords) {
-    Scanner s = makeScannerFromString("Int Real Bool String Void");
-
-    std::vector<Token::Type> v = { Token::INT_TYPE, Token::REAL_TYPE,
-                                    Token::BOOL_TYPE, Token::STRING_TYPE,
-                                    Token::VOID_TYPE };
-
-    for(auto type : v) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), type);
-    }
-
+BOOST_AUTO_TEST_CASE(int_type) {
+    Scanner s = makeScannerFromString("Int");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::INT_TYPE);
 }
 
-BOOST_AUTO_TEST_CASE(ignore_leading_whitespace) {
-    Scanner s = makeScannerFromString("     \t\t\t     Int");
-    BOOST_CHECK_EQUAL(s.getNextToken(), Token::INT_TYPE);
+BOOST_AUTO_TEST_CASE(real_type) {
+    Scanner s = makeScannerFromString("Real");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::REAL_TYPE);
+}
+
+BOOST_AUTO_TEST_CASE(bool_type) {
+    Scanner s = makeScannerFromString("Bool");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::BOOL_TYPE);
+}
+
+BOOST_AUTO_TEST_CASE(string_type) {
+    Scanner s = makeScannerFromString("String");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::STRING_TYPE);
+}
+
+BOOST_AUTO_TEST_CASE(void_type) {
+    Scanner s = makeScannerFromString("Void");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::VOID_TYPE);
 }
 
 BOOST_AUTO_TEST_CASE(return_arrow) {
@@ -63,45 +84,70 @@ BOOST_AUTO_TEST_CASE(return_keyword) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::RETURN);
 }
 
-BOOST_AUTO_TEST_CASE(int_constants) {
-    Scanner s = makeScannerFromString("34 -129");
+BOOST_AUTO_TEST_CASE(positive_int_constant) {
+    Scanner s = makeScannerFromString("34");
     Token t1 = s.getNextToken();
-    Token t2 = s.getNextToken();
 
     BOOST_CHECK_EQUAL(t1.getType(), Token::INT_VALUE);
     BOOST_CHECK_EQUAL(t1.getInt(), 34);
-    BOOST_CHECK_EQUAL(t2.getType(), Token::INT_VALUE);
-    BOOST_CHECK_EQUAL(t2.getInt(), -129);
 }
 
-BOOST_AUTO_TEST_CASE(bool_constants) {
-    Scanner s = makeScannerFromString("True False");
+BOOST_AUTO_TEST_CASE(negative_int_constant) {
+    Scanner s = makeScannerFromString("-139");
+    Token t1 = s.getNextToken();
 
-    Token t = s.getNextToken();
-    Token f = s.getNextToken();
-
-    BOOST_CHECK_EQUAL(t, Token::BOOL_VALUE);
-    BOOST_CHECK_EQUAL(t.getBool(), true);
-    BOOST_CHECK_EQUAL(f, Token::BOOL_VALUE);
-    BOOST_CHECK_EQUAL(f.getBool(), false);
+    BOOST_CHECK_EQUAL(t1.getType(), Token::INT_VALUE);
+    BOOST_CHECK_EQUAL(t1.getInt(), -139);
 }
 
-BOOST_AUTO_TEST_CASE(real_constants) {
-    std::vector<double> reals = {10.3333333333, -0.03, -25.123, 0.75};
+BOOST_AUTO_TEST_CASE(true_constant) {
+    Scanner s = makeScannerFromString("True");
+    Token t1 = s.getNextToken();
+
+    BOOST_CHECK_EQUAL(t1.getType(), Token::BOOL_VALUE);
+    BOOST_CHECK_EQUAL(t1.getBool(), true);
+}
+
+BOOST_AUTO_TEST_CASE(false_constant) {
+    Scanner s = makeScannerFromString("False");
+    Token t1 = s.getNextToken();
+
+    BOOST_CHECK_EQUAL(t1.getType(), Token::BOOL_VALUE);
+    BOOST_CHECK_EQUAL(t1.getBool(), false);
+}
+
+BOOST_AUTO_TEST_CASE(big_real_constant) {
+    double real = 1024.33333333333;
     std::stringstream ss;
-    for (auto real: reals) {
-        ss << real << " ";
-    }
+    ss << real;
     Scanner s = makeScannerFromString(ss.str());
-
-    for (auto real: reals) {
-        Token t = s.getNextToken();
-        BOOST_CHECK_EQUAL(t, Token::REAL_VALUE);
-        BOOST_CHECK(abs(t.getReal() - real) < 0.001); // cant precisely compare doubles
-    }
+    Token t = s.getNextToken();
+    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
 }
 
-BOOST_AUTO_TEST_CASE(string_constants) {
+BOOST_AUTO_TEST_CASE(small_real_constant) {
+    double real = 0.75;
+    std::stringstream ss;
+    ss << real;
+    Scanner s = makeScannerFromString(ss.str());
+    Token t = s.getNextToken();
+    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
+}
+
+BOOST_AUTO_TEST_CASE(negative_real_constant) {
+    double real = -0.03;
+    std::stringstream ss;
+    ss << real;
+    Scanner s = makeScannerFromString(ss.str());
+    Token t = s.getNextToken();
+    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
+}
+
+
+BOOST_AUTO_TEST_CASE(string_constant) {
     std::string text = "a string";
     Scanner s = makeScannerFromString("\"" + text + "\"");
 
@@ -111,66 +157,124 @@ BOOST_AUTO_TEST_CASE(string_constants) {
     BOOST_CHECK_EQUAL(str.getString(), text);
 }
 
-BOOST_AUTO_TEST_CASE(braces) {
-    Scanner s = makeScannerFromString("{} () []");
-    std::vector<Token::Type> v = { Token::CURLY_BRACE_OPEN, Token::CURLY_BRACE_CLOSE,
-                                    Token::BRACE_OPEN, Token::BRACE_CLOSE,
-                                    Token::SQUARE_BRACE_OPEN, Token::SQUARE_BRACE_CLOSE };
+BOOST_AUTO_TEST_CASE(curly_brace_open) {
+    Scanner s = makeScannerFromString("{");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::CURLY_BRACE_OPEN);
+}
 
-    for(auto type : v) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), type);
-    }
+BOOST_AUTO_TEST_CASE(curly_brace_close) {
+    Scanner s = makeScannerFromString("}");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::CURLY_BRACE_CLOSE);
+}
 
+BOOST_AUTO_TEST_CASE(brace_open) {
+    Scanner s = makeScannerFromString("(");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::BRACE_OPEN);
+}
+
+BOOST_AUTO_TEST_CASE(brace_close) {
+    Scanner s = makeScannerFromString(")");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::BRACE_CLOSE);
+}
+
+BOOST_AUTO_TEST_CASE(square_brace_open) {
+    Scanner s = makeScannerFromString("[");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::SQUARE_BRACE_OPEN);
+}
+
+BOOST_AUTO_TEST_CASE(square_brace_close) {
+    Scanner s = makeScannerFromString("]");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::SQUARE_BRACE_CLOSE);
 }
 
 BOOST_AUTO_TEST_CASE(assignment_operator) {
     Scanner s = makeScannerFromString(" = ");
-    
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::ASSIGNMENT_OPERATOR);
 }
 
-/* TODO - test them separately
-BOOST_AUTO_TEST_CASE(arithmetic_operators) {
-    Scanner s = makeScannerFromString("^* /+//-");
-
-    for(int i = 0; i < 6; ++i) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), Token::ARITHMETIC_OPERATOR);
-    }
-    BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT); // ensure // is treated as one operator
-}
-*/
-
-BOOST_AUTO_TEST_CASE(comparison_operators) {
-    Scanner s = makeScannerFromString("< <= > >= == !=");
-
-    for(int i = 0; i < 6; ++i) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), Token::COMPARISON_OPERATOR);
-    }
+BOOST_AUTO_TEST_CASE(power_operator) {
+    Scanner s = makeScannerFromString("^");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::POWER);
 }
 
-/* TODO - test separately
-BOOST_AUTO_TEST_CASE(logical_operators) {
-    Scanner s = makeScannerFromString("and or not");
-
-    for(int i = 0; i < 3; ++i) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), Token::LOGICAL_OPERATOR);
-    }
-}
-*/
-
-BOOST_AUTO_TEST_CASE(identifiers) {
-    Scanner s = makeScannerFromString("functionName function_name function123");
-
-    for(int i = 0; i < 3; ++i) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), Token::IDENTIFIER);
-    }
+BOOST_AUTO_TEST_CASE(multiply_operator) {
+    Scanner s = makeScannerFromString("*");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::MULTIPLY);
 }
 
-BOOST_AUTO_TEST_CASE(separators) {
-    Scanner s = makeScannerFromString(", :");
+BOOST_AUTO_TEST_CASE(divide_operator) {
+    Scanner s = makeScannerFromString("/");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::DIVIDE);
+}
 
+BOOST_AUTO_TEST_CASE(int_divide_operator) {
+    Scanner s = makeScannerFromString("//");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::INT_DIVIDE);
+}
+
+BOOST_AUTO_TEST_CASE(add_operator) {
+    Scanner s = makeScannerFromString("+");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::ADD);
+}
+
+BOOST_AUTO_TEST_CASE(subtract_operator) {
+    Scanner s = makeScannerFromString(" - ");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::SUBTRACT);
+}
+
+BOOST_AUTO_TEST_CASE(less_than) {
+    Scanner s = makeScannerFromString("<");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::LESS_THAN);
+}
+
+BOOST_AUTO_TEST_CASE(greater_than) {
+    Scanner s = makeScannerFromString(">");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::GREATER_THAN);
+}
+
+BOOST_AUTO_TEST_CASE(less_equal) {
+    Scanner s = makeScannerFromString("<=");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::LESS_EQUAL);
+}
+
+BOOST_AUTO_TEST_CASE(greater_equal) {
+    Scanner s = makeScannerFromString(">=");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::GREATER_EQUAL);
+}
+
+BOOST_AUTO_TEST_CASE(equal) {
+    Scanner s = makeScannerFromString("==");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::EQUAL);
+}
+
+BOOST_AUTO_TEST_CASE(not_equal) {
+    Scanner s = makeScannerFromString("!=");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::NOT_EQUAL);
+}
+
+BOOST_AUTO_TEST_CASE(and_keyword) {
+    Scanner s = makeScannerFromString("and");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::AND);
+}
+
+BOOST_AUTO_TEST_CASE(not_keyword) {
+    Scanner s = makeScannerFromString("not");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::NOT);
+}
+
+BOOST_AUTO_TEST_CASE(or_keyword) {
+    Scanner s = makeScannerFromString("or");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::OR);
+}
+
+BOOST_AUTO_TEST_CASE(identifier) {
+    Scanner s = makeScannerFromString("functionName_123");
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::IDENTIFIER);
+}
+
+BOOST_AUTO_TEST_CASE(comma) {
+    Scanner s = makeScannerFromString(",");
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::COMMA);
-    BOOST_CHECK_EQUAL(s.getNextToken(), Token::COLON);
 }
 
 BOOST_AUTO_TEST_CASE(skip_comments) {

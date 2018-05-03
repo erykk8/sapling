@@ -4,13 +4,14 @@
 
 class Token: public Symbol {
     public:
-        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA, COLON,
+        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
                         INT_TYPE, BOOL_TYPE, REAL_TYPE, STRING_TYPE, VOID_TYPE,
                         NOT, AND, OR,
                         INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
                         IDENTIFIER,
                         ASSIGNMENT_OPERATOR,
-                        COMPARISON_OPERATOR,
+                        LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL,
+                        EQUAL, NOT_EQUAL,
                         POWER, MULTIPLY, INT_DIVIDE, DIVIDE, ADD, SUBTRACT,
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
