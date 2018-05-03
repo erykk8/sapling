@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(true_constant) {
     Token t1 = s.getNextToken();
 
     BOOST_CHECK_EQUAL(t1.getType(), Token::BOOL_VALUE);
-    BOOST_CHECK_EQUAL(t1.getBool(), true);
+    BOOST_CHECK(t1.getBool());
 }
 
 BOOST_AUTO_TEST_CASE(false_constant) {
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(false_constant) {
     Token t1 = s.getNextToken();
 
     BOOST_CHECK_EQUAL(t1.getType(), Token::BOOL_VALUE);
-    BOOST_CHECK_EQUAL(t1.getBool(), false);
+    BOOST_CHECK(!t1.getBool());
 }
 
 BOOST_AUTO_TEST_CASE(big_real_constant) {
@@ -122,8 +122,8 @@ BOOST_AUTO_TEST_CASE(big_real_constant) {
     ss << real;
     Scanner s = makeScannerFromString(ss.str());
     Token t = s.getNextToken();
-    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
-    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
+    BOOST_CHECK_EQUAL(t, Token::REAL_VALUE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.1);
 }
 
 BOOST_AUTO_TEST_CASE(small_real_constant) {
@@ -132,8 +132,8 @@ BOOST_AUTO_TEST_CASE(small_real_constant) {
     ss << real;
     Scanner s = makeScannerFromString(ss.str());
     Token t = s.getNextToken();
-    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
-    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
+    BOOST_CHECK_EQUAL(t, Token::REAL_VALUE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.1);
 }
 
 BOOST_AUTO_TEST_CASE(negative_real_constant) {
@@ -142,8 +142,8 @@ BOOST_AUTO_TEST_CASE(negative_real_constant) {
     ss << real;
     Scanner s = makeScannerFromString(ss.str());
     Token t = s.getNextToken();
-    BOOST_CHECK_EQUAL(t, Token::REAL_TYPE);
-    BOOST_CHECK_CLOSE(t.getReal(), real, 0.001);
+    BOOST_CHECK_EQUAL(t, Token::REAL_VALUE);
+    BOOST_CHECK_CLOSE(t.getReal(), real, 0.1);
 }
 
 

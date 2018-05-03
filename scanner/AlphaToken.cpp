@@ -5,7 +5,7 @@ bool Scanner::alphaToken() {
     std::stringstream buf;
 
     while(alphanumericOrUnderscore(reader->peekChar())) {
-        buf << reader->nextChar();
+        buf << (char)reader->nextChar();
     }
 
     // lazy

@@ -5,7 +5,7 @@ bool Scanner::equalsCharacterToken() {
     std::stringstream buf;
 
     if (reader->peekChar() == '=') {
-        buf << reader->nextChar();
+        buf << (char)reader->nextChar();
         char c = reader->peekChar();
         switch(c) {
             case '>':

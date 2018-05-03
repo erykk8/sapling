@@ -6,9 +6,9 @@ bool Scanner::valueToken() {
 
     switch(reader->peekChar()) {
         case '-':
-            buf << reader->nextChar();
+            buf << (char)reader->nextChar();
             while(digit(reader->peekChar())) {
-                buf << reader->nextChar();
+                buf << (char)reader->nextChar();
             }
 
             if(buf.str() == "-") {
@@ -16,9 +16,9 @@ bool Scanner::valueToken() {
                 currentToken.setOtherValue(buf.str());
             }
             else if(reader->peekChar() == '.') {
-                buf << reader->nextChar();
+                buf << (char)reader->nextChar();
                 while(digit(reader->peekChar())) {
-                    buf << reader->nextChar();
+                    buf << (char)reader->nextChar();
                 }
                 currentToken.setReal(std::stod(buf.str()));
             }
@@ -29,7 +29,7 @@ bool Scanner::valueToken() {
         case '"':
             reader->nextChar();
             while(stringable(reader->peekChar())) {
-                buf << reader->nextChar();
+                buf << (char)reader->nextChar();
             }
             if(reader->peekChar() == '"') {
                 reader->nextChar();
@@ -40,12 +40,12 @@ bool Scanner::valueToken() {
             break;
         default:
             while(digit(reader->peekChar())) {
-                buf << reader->nextChar();
+                buf << (char)reader->nextChar();
             }
             if(reader->peekChar() == '.') {
-                buf << reader->nextChar();
+                buf << (char)reader->nextChar();
                 while(digit(reader->peekChar())) {
-                    buf << reader->nextChar();
+                    buf << (char)reader->nextChar();
                 }
                 currentToken.setReal(std::stod(buf.str()));
             }
