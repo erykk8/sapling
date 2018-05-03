@@ -1,6 +1,10 @@
 #include "Token.h"
 using namespace TokenType;
 
+bool Token::isTerminal() const {
+    return type <= EOT;
+}
+
 Type Token::getType() const {
     return type;
 }

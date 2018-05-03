@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Symbol.h"
-#include "NonTerminal.h"
+#include "Token.h"
 
 #include <map>
 #include <memory>
@@ -9,8 +8,8 @@
 
 class Productions {
     public:
-        typedef std::vector<std::shared_ptr<Symbol>> symbol_sequence;
-        const std::vector<symbol_sequence> operator[](NonTerminalType::Type n) { return data[n]; }
+        typedef std::vector<Token> symbol_sequence;
+        const std::vector<symbol_sequence> operator[] (TokenType::Type n) { return data[n]; }
     private:
-        static std::map<NonTerminalType::Type, const std::vector<symbol_sequence>> data;
+        static std::map<TokenType::Type, const std::vector<symbol_sequence>> data;
 };
