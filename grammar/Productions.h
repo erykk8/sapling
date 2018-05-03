@@ -8,7 +8,7 @@
 
 class Productions {
     public:
-        typedef std::vector<Symbol> symbol_sequence
+        typedef std::vector<Symbol> symbol_sequence;
         symbol_sequence operator[](NonTerminal n) { return data[n]; }
     private:
         static std::unordered_map<NonTerminal, std::vector<symbol_sequence>> data;
