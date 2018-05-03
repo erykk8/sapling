@@ -5,23 +5,23 @@ bool Scanner::operatorToken() {
     std::stringstream buf;
     switch(reader->peekChar()) {
         case '>':
-            currentToken = Token::GREATER_THAN;
+            currentToken = TokenType::GREATER_THAN;
             buf << (char)reader->nextChar();
             if(reader->peekChar() == '=') {
-                currentToken = Token::GREATER_EQUAL;
+                currentToken = TokenType::GREATER_EQUAL;
                 buf << (char)reader->nextChar();
             }
             break;
         case '<':
-            currentToken = Token::LESS_THAN;
+            currentToken = TokenType::LESS_THAN;
             buf << (char)reader->nextChar();
             if(reader->peekChar() == '=') {
-                currentToken = Token::LESS_EQUAL;
+                currentToken = TokenType::LESS_EQUAL;
                 buf << (char)reader->nextChar();
             }
             break;
         case '!':
-            currentToken = Token::NOT_EQUAL;
+            currentToken = TokenType::NOT_EQUAL;
             buf << (char)reader->nextChar();
             if(reader->peekChar() == '=') {
                 buf << (char)reader->nextChar();
@@ -29,26 +29,26 @@ bool Scanner::operatorToken() {
             }
             else return false;
         case '*':
-            currentToken = Token::MULTIPLY;
+            currentToken = TokenType::MULTIPLY;
             buf << (char)reader->nextChar();
             break;
         case '^':
-            currentToken = Token::POWER;
+            currentToken = TokenType::POWER;
             buf << (char)reader->nextChar();
             break;
         case '+':
-            currentToken = Token::ADD;
+            currentToken = TokenType::ADD;
             buf << (char)reader->nextChar();
             break;
         case '-':
-            currentToken = Token::SUBTRACT;
+            currentToken = TokenType::SUBTRACT;
             buf << (char)reader->nextChar();
             break;
         case '/':
-            currentToken = Token::DIVIDE;
+            currentToken = TokenType::DIVIDE;
             buf << (char)reader->nextChar();
             if(reader->peekChar() == '/') {
-                currentToken = Token::INT_DIVIDE;
+                currentToken = TokenType::INT_DIVIDE;
                 buf << (char)reader->nextChar();
             }
             break;

@@ -12,7 +12,7 @@ bool Scanner::valueToken() {
             }
 
             if(buf.str() == "-") {
-                currentToken = Token::SUBTRACT;
+                currentToken = TokenType::SUBTRACT;
                 currentToken.setOtherValue(buf.str());
             }
             else if(reader->peekChar() == '.') {

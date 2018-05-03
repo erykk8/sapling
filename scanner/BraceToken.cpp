@@ -3,22 +3,22 @@
 bool Scanner::braceToken() {
     switch(reader->peekChar()) {
         case '{':
-            currentToken = Token::CURLY_BRACE_OPEN;
+            currentToken = TokenType::CURLY_BRACE_OPEN;
             break;
         case '}':
-            currentToken = Token::CURLY_BRACE_CLOSE;
+            currentToken = TokenType::CURLY_BRACE_CLOSE;
             break;
         case '(':
-            currentToken = Token::BRACE_OPEN;
+            currentToken = TokenType::BRACE_OPEN;
             break;
         case ')':
-            currentToken = Token::BRACE_CLOSE;
+            currentToken = TokenType::BRACE_CLOSE;
             break;
         case '[':
-            currentToken = Token::SQUARE_BRACE_OPEN;
+            currentToken = TokenType::SQUARE_BRACE_OPEN;
             break;
         case ']':
-            currentToken = Token::SQUARE_BRACE_CLOSE;
+            currentToken = TokenType::SQUARE_BRACE_CLOSE;
             break;
         default:
             return false;

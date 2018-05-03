@@ -10,27 +10,27 @@ bool Scanner::alphaToken() {
 
     // lazy
     if(buf.str() == "return") {
-        currentToken = Token::RETURN;
+        currentToken = TokenType::RETURN;
     }
     else if(buf.str() == "if") {
-        currentToken = Token::IF;
+        currentToken = TokenType::IF;
     }
     else if(buf.str() == "elif") {
-        currentToken = Token::ELIF;
+        currentToken = TokenType::ELIF;
     }
     else if(buf.str() == "else") {
-        currentToken = Token::ELSE;
+        currentToken = TokenType::ELSE;
     }
     else if(buf.str() == "and") {
-        currentToken = Token::AND;
+        currentToken = TokenType::AND;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "or") {
-        currentToken = Token::OR;
+        currentToken = TokenType::OR;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "not") {
-        currentToken = Token::NOT;
+        currentToken = TokenType::NOT;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "True") {
@@ -40,27 +40,27 @@ bool Scanner::alphaToken() {
         currentToken.setBool(false);
     }
     else if(buf.str() == "Int") {
-        currentToken = Token::INT_TYPE;
+        currentToken = TokenType::INT_TYPE;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "Bool") {
-        currentToken = Token::BOOL_TYPE;
+        currentToken = TokenType::BOOL_TYPE;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "String") {
-        currentToken = Token::STRING_TYPE;
+        currentToken = TokenType::STRING_TYPE;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "Real") {
-        currentToken = Token::REAL_TYPE;
+        currentToken = TokenType::REAL_TYPE;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str() == "Void") {
-        currentToken = Token::VOID_TYPE;
+        currentToken = TokenType::VOID_TYPE;
         currentToken.setOtherValue(buf.str());
     }
     else if(buf.str().length() > 0) {
-        currentToken = Token::IDENTIFIER;
+        currentToken = TokenType::IDENTIFIER;
     }
     else return false;
 

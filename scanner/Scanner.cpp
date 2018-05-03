@@ -17,7 +17,7 @@ void Scanner::readNextToken() {
     }
 
     if (eotToken()) {
-        currentToken = Token::EOT;
+        currentToken = TokenType::EOT;
         return;
     }
 
@@ -44,7 +44,7 @@ void Scanner::throwInvalidString() {
 bool Scanner::separatorToken() {
     switch(reader->peekChar()) {
         case ',':
-            currentToken = Token::COMMA;
+            currentToken = TokenType::COMMA;
             break;
         default:
             return false;

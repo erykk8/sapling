@@ -10,16 +10,16 @@ bool Scanner::equalsCharacterToken() {
         switch(c) {
             case '>':
                 reader->nextChar();
-                currentToken = Token::RETURN_ARROW;
+                currentToken = TokenType::RETURN_ARROW;
                 buf << c;
                 break;
             case '=':
                 reader->nextChar();
-                currentToken = Token::EQUAL;
+                currentToken = TokenType::EQUAL;
                 buf << c;
                 break;
             default:
-                currentToken = Token::ASSIGNMENT_OPERATOR;
+                currentToken = TokenType::ASSIGNMENT_OPERATOR;
                 break;
         }
         currentToken.setOtherValue(buf.str());

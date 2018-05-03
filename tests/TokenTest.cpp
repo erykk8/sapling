@@ -7,38 +7,38 @@ BOOST_AUTO_TEST_SUITE(TokenTest)
 
 BOOST_AUTO_TEST_CASE(get_type_after_default_constructor_returns_eot) {
     Token t;
-    BOOST_CHECK_EQUAL(t.getType(), Token::EOT);
+    BOOST_CHECK_EQUAL(t.getType(), TokenType::EOT);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_type_constructor_returns_given_type) {
-    Token t1(Token::CURLY_BRACE_OPEN), t2(Token::LESS_THAN), t3(Token::INT_TYPE);
-    BOOST_CHECK_EQUAL(t1.getType(), Token::CURLY_BRACE_OPEN);
-    BOOST_CHECK_EQUAL(t2.getType(), Token::LESS_THAN);
-    BOOST_CHECK_EQUAL(t3.getType(), Token::INT_TYPE);
+    Token t1(TokenType::CURLY_BRACE_OPEN), t2(TokenType::LESS_THAN), t3(TokenType::INT_TYPE);
+    BOOST_CHECK_EQUAL(t1.getType(), TokenType::CURLY_BRACE_OPEN);
+    BOOST_CHECK_EQUAL(t2.getType(), TokenType::LESS_THAN);
+    BOOST_CHECK_EQUAL(t3.getType(), TokenType::INT_TYPE);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_set_int_returns_int_value) {
     Token t;
     t.setInt(413);
-    BOOST_CHECK_EQUAL(t.getType(), Token::INT_VALUE);
+    BOOST_CHECK_EQUAL(t.getType(), TokenType::INT_VALUE);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_set_bool_returns_bool_value) {
     Token t;
     t.setBool(true);
-    BOOST_CHECK_EQUAL(t.getType(), Token::BOOL_VALUE);
+    BOOST_CHECK_EQUAL(t.getType(), TokenType::BOOL_VALUE);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_set_real_returns_real_value) {
     Token t;
     t.setReal(4.13);
-    BOOST_CHECK_EQUAL(t.getType(), Token::REAL_VALUE);
+    BOOST_CHECK_EQUAL(t.getType(), TokenType::REAL_VALUE);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_set_string_returns_string_value) {
     Token t;
     t.setString("string");
-    BOOST_CHECK_EQUAL(t.getType(), Token::STRING_VALUE);
+    BOOST_CHECK_EQUAL(t.getType(), TokenType::STRING_VALUE);
 }
 
 BOOST_AUTO_TEST_CASE(get_int_after_set_int_returns_integer) {

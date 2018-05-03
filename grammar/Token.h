@@ -2,9 +2,8 @@
 #include "Symbol.h"
 #include <string>
 
-class Token: public Symbol {
-    public:
-        enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
+namespace TokenType {
+    enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
                         INT_TYPE, BOOL_TYPE, REAL_TYPE, STRING_TYPE, VOID_TYPE,
                         NOT, AND, OR,
                         INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
@@ -18,13 +17,17 @@ class Token: public Symbol {
                         SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
                         EOT
                     };
-        Token();
-        Token(Type type);
-        ~Token();
+}
+
+class Token: public Symbol {
+    public:
+        Token() : type(TokenType::EOT) {}
+        Token(const TokenType::Type& type) : type(type) {};
+        ~Token() = default;
 
         bool isTerminal() { return true; }
 
-        Type getType() const;
+        TokenType::Type getType() const;
         int getInt() const;
         bool getBool() const;
         double getReal() const;
@@ -37,14 +40,14 @@ class Token: public Symbol {
 
         void setOtherValue(std::string value);
 
-        bool operator==(const Type type) const;
-        bool operator!=(const Type type) const;
-        operator Type() const { return type; }
+        bool operator==(const TokenType::Type type) const;
+        bool operator!=(const TokenType::Type type) const;
+        operator TokenType::Type() const { return type; }
 
     private:
         int line;
         int position;
-        Type type;
+        TokenType::Type type;
         union {
             int integer;
             bool boolean;
