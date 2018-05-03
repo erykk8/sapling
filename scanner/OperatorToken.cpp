@@ -14,16 +14,26 @@ bool Scanner::operatorToken() {
             }
             break;
         case '*':
+            currentToken = Token::MULTIPLY;
+            buf << reader->nextChar();
+            break;
         case '^':
+            currentToken = Token::POWER;
+            buf << reader->nextChar();
+            break;
         case '+':
+            currentToken = Token::ADD;
+            buf << reader->nextChar();
+            break;
         case '-':
-            currentToken = Token::ARITHMETIC_OPERATOR;
+            currentToken = Token::SUBTRACT;
             buf << reader->nextChar();
             break;
         case '/':
-            currentToken = Token::ARITHMETIC_OPERATOR;
+            currentToken = Token::DIVIDE;
             buf << reader->nextChar();
             if(reader->peekChar() == '/') {
+                currentToken = Token::INT_DIVIDE;
                 buf << reader->nextChar();
             }
             break;

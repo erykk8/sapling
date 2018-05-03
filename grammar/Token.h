@@ -1,16 +1,17 @@
 #pragma once
+#include "Symbol.h"
 #include <string>
 
-class Token {
+class Token: public Symbol {
     public:
         enum Type   {   IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA, COLON,
-                        TYPE_KEYWORD,
-                        LOGICAL_OPERATOR,
+                        INT_TYPE, BOOL_TYPE, REAL_TYPE, STRING_TYPE, VOID_TYPE,
+                        NOT, AND, OR,
                         INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
                         IDENTIFIER,
                         ASSIGNMENT_OPERATOR,
                         COMPARISON_OPERATOR,
-                        ARITHMETIC_OPERATOR,
+                        POWER, MULTIPLY, INT_DIVIDE, DIVIDE, ADD, SUBTRACT,
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
                         SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
@@ -19,6 +20,8 @@ class Token {
         Token();
         Token(Type type);
         ~Token();
+
+        bool isTerminal() { return true; }
 
         Type getType() const;
         int getInt() const;

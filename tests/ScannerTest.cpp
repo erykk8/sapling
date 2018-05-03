@@ -36,16 +36,21 @@ BOOST_AUTO_TEST_CASE(if_elif_else) {
 }
 
 BOOST_AUTO_TEST_CASE(type_keywords) {
-    Scanner s = makeScannerFromString("Int Real Bool String Set List Void");
+    Scanner s = makeScannerFromString("Int Real Bool String Void");
 
-    for(int i = 0; i < 7; ++i) {
-        BOOST_CHECK_EQUAL(s.getNextToken(), Token::TYPE_KEYWORD);
+    std::vector<Token::Type> v = { Token::INT_TYPE, Token::REAL_TYPE,
+                                    Token::BOOL_TYPE, Token::STRING_TYPE,
+                                    Token::VOID_TYPE };
+
+    for(auto type : v) {
+        BOOST_CHECK_EQUAL(s.getNextToken(), type);
     }
+
 }
 
 BOOST_AUTO_TEST_CASE(ignore_leading_whitespace) {
     Scanner s = makeScannerFromString("     \t\t\t     Int");
-    BOOST_CHECK_EQUAL(s.getNextToken(), Token::TYPE_KEYWORD);
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::INT_TYPE);
 }
 
 BOOST_AUTO_TEST_CASE(return_arrow) {
@@ -124,14 +129,16 @@ BOOST_AUTO_TEST_CASE(assignment_operator) {
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::ASSIGNMENT_OPERATOR);
 }
 
+/* TODO - test them separately
 BOOST_AUTO_TEST_CASE(arithmetic_operators) {
-    Scanner s = makeScannerFromString("^*/+//-");
+    Scanner s = makeScannerFromString("^* /+//-");
 
     for(int i = 0; i < 6; ++i) {
         BOOST_CHECK_EQUAL(s.getNextToken(), Token::ARITHMETIC_OPERATOR);
     }
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT); // ensure // is treated as one operator
 }
+*/
 
 BOOST_AUTO_TEST_CASE(comparison_operators) {
     Scanner s = makeScannerFromString("< <= > >= == !=");
@@ -141,6 +148,7 @@ BOOST_AUTO_TEST_CASE(comparison_operators) {
     }
 }
 
+/* TODO - test separately
 BOOST_AUTO_TEST_CASE(logical_operators) {
     Scanner s = makeScannerFromString("and or not");
 
@@ -148,6 +156,7 @@ BOOST_AUTO_TEST_CASE(logical_operators) {
         BOOST_CHECK_EQUAL(s.getNextToken(), Token::LOGICAL_OPERATOR);
     }
 }
+*/
 
 BOOST_AUTO_TEST_CASE(identifiers) {
     Scanner s = makeScannerFromString("functionName function_name function123");
@@ -166,7 +175,7 @@ BOOST_AUTO_TEST_CASE(separators) {
 
 BOOST_AUTO_TEST_CASE(skip_comments) {
     Scanner s = makeScannerFromString("Int x\n# a comment\n# another comment");
-    BOOST_CHECK_EQUAL(s.getNextToken(), Token::TYPE_KEYWORD);
+    BOOST_CHECK_EQUAL(s.getNextToken(), Token::INT_TYPE);
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::IDENTIFIER);
     BOOST_CHECK_EQUAL(s.getNextToken(), Token::EOT);
 }

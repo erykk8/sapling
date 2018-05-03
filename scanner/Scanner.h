@@ -1,5 +1,5 @@
 #pragma once
-#include "../token/Token.h"
+#include "../grammar/Token.h"
 #include "IO.h"
 #include <memory>
 #include <functional>
