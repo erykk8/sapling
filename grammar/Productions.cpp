@@ -8,372 +8,372 @@ std::map<TokenType::Type, const std::vector<Productions::symbol_sequence>> Produ
 {
     { PROGRAM, 
         {
-            {(Token)EOT},
-            {(Token)FUNCTION_DECLARATION, 
-            (Token)PROGRAM}
+            {EOT},
+            {FUNCTION_DECLARATION, 
+            PROGRAM}
         }
     },
 
     { FUNCTION_DECLARATION,
         {
-            {(Token)TYPE,
-            (Token)IDENTIFIER,
-            (Token)PARAMETER_DECLARATION,
-            (Token)ASSIGNMENT_OPERATOR,
-            (Token)FUNCTION_BODY_BLOCK}
+            {TYPE,
+            IDENTIFIER,
+            PARAMETER_DECLARATION,
+            ASSIGNMENT_OPERATOR,
+            FUNCTION_BODY_BLOCK}
         }
     },
     
     { FUNCTION_CALL,
         {
-            {(Token)IDENTIFIER,
-            (Token)PARAMETER_CALL}
+            {IDENTIFIER,
+            PARAMETER_CALL}
         }
     },
 
     { PARAMETER_DECLARATION,
         {
-            {(Token)BRACE_OPEN,
-            (Token)ARG_LIST,
-            (Token)BRACE_CLOSE}
+            {BRACE_OPEN,
+            ARG_LIST,
+            BRACE_CLOSE}
         }
     },
 
     { PARAMETER_CALL,
         {
-            {(Token)BRACE_OPEN,
-            (Token)VALUE_LIST,
-            (Token)BRACE_CLOSE}
+            {BRACE_OPEN,
+            VALUE_LIST,
+            BRACE_CLOSE}
         }
     },
     
     { ARG_LIST,
         {
             {},
-            {(Token)TYPE,
-            (Token)IDENTIFIER,
-            (Token)ARG_LIST_P}
+            {TYPE,
+            IDENTIFIER,
+            ARG_LIST_P}
         }
     },
 
     { ARG_LIST_P,
         {
             {},
-            {(Token)COMMA,
-            (Token)TYPE,
-            (Token)IDENTIFIER,
-            (Token)ARG_LIST_P}
+            {COMMA,
+            TYPE,
+            IDENTIFIER,
+            ARG_LIST_P}
         }
     },
 
     { VALUE_LIST,
         {
             {},
-            {(Token)VALUE_EXPRESSION,
-            (Token)VALUE_LIST_P}
+            {VALUE_EXPRESSION,
+            VALUE_LIST_P}
         }
     },
 
     { VALUE_LIST_P,
         {
             {},
-            {(Token)COMMA,
-            (Token)VALUE_EXPRESSION,
-            (Token)VALUE_LIST_P}
+            {COMMA,
+            VALUE_EXPRESSION,
+            VALUE_LIST_P}
         }
     },
 
     { TYPE,
         {
-            {(Token)INT_TYPE},
-            {(Token)REAL_TYPE},
-            {(Token)BOOL_TYPE},
-            {(Token)STRING_TYPE},
-            {(Token)LAMBDA_TYPE}
+            {INT_TYPE},
+            {REAL_TYPE},
+            {BOOL_TYPE},
+            {STRING_TYPE},
+            {LAMBDA_TYPE}
         }
     },
 
     { LAMBDA_TYPE_LIST,
         {   
             {},
-            {(Token)VOID_TYPE},
-            {(Token)TYPE,
-            (Token)TYPE_LIST_P}
+            {VOID_TYPE},
+            {TYPE,
+            TYPE_LIST_P}
         }
     },
 
     { TYPE_LIST,
         {
-            {(Token)TYPE,
-            (Token)TYPE_LIST_P}
+            {TYPE,
+            TYPE_LIST_P}
         }
     },
 
     { VALUE_LIST_P,
         {
             {},
-            {(Token)COMMA,
-            (Token)TYPE,
-            (Token)TYPE_LIST_P}
+            {COMMA,
+            TYPE,
+            TYPE_LIST_P}
         }
     },
 
     { LAMBDA_TYPE,
         {
-            {(Token)BRACE_OPEN,
-            (Token)LAMBDA_TYPE_LIST,
-            (Token)BRACE_CLOSE,
-            (Token)RETURN_ARROW,
-            (Token)BRACE_OPEN,
-            (Token)TYPE_LIST,
-            (Token)BRACE_CLOSE}
+            {BRACE_OPEN,
+            LAMBDA_TYPE_LIST,
+            BRACE_CLOSE,
+            RETURN_ARROW,
+            BRACE_OPEN,
+            TYPE_LIST,
+            BRACE_CLOSE}
         }
     },
 
     { LAMBDA,
         {
-            {(Token)BRACE_OPEN,
-            (Token)ARG_LIST,
-            (Token)BRACE_CLOSE,
-            (Token)RETURN_ARROW,
-            (Token)FUNCTION_BODY_BLOCK}
+            {BRACE_OPEN,
+            ARG_LIST,
+            BRACE_CLOSE,
+            RETURN_ARROW,
+            FUNCTION_BODY_BLOCK}
         }
     },
 
     { VALUE_OR_INSTRUCTION_BLOCK,
         {
-            {(Token)VALUE_BLOCK},
-            {(Token)INSTRUCTION_BLOCK}
+            {VALUE_BLOCK},
+            {INSTRUCTION_BLOCK}
         }
     },
 
     { FUNCTION_BODY_BLOCK,
         {
-            {(Token)VALUE_BLOCK},
-            {(Token)CURLY_BRACE_OPEN,
-            (Token)VALUE_OR_INSTRUCTION_BLOCK,
-            (Token)CURLY_BRACE_CLOSE}
+            {VALUE_BLOCK},
+            {CURLY_BRACE_OPEN,
+            VALUE_OR_INSTRUCTION_BLOCK,
+            CURLY_BRACE_CLOSE}
         }
     },
 
     { VALUE_BLOCK,
         {
-            {(Token)IF_BLOCK},
-            {(Token)VALUE_EXPRESSION}
+            {IF_BLOCK},
+            {VALUE_EXPRESSION}
         }
     },
 
     { VALUE_EXPRESSION,
         {
-            {(Token)LOGICAL_EXPRESSION,
-            (Token)STRING_VALUE,
-            (Token)LAMBDA}
+            {LOGICAL_EXPRESSION,
+            STRING_VALUE,
+            LAMBDA}
         }
     },
 
     { NUMERIC_EXPRESSION,
         {
-            {(Token)MULTIPLICATION,
-            (Token)ADDITION_P}
+            {MULTIPLICATION,
+            ADDITION_P}
         }
     },
 
     { ADDITION_P,
         {
             {},
-            {(Token)ADD,
-            (Token)NUMERIC_EXPRESSION},
-            {(Token)SUBTRACT,
-            (Token)NUMERIC_EXPRESSION}
+            {ADD,
+            NUMERIC_EXPRESSION},
+            {SUBTRACT,
+            NUMERIC_EXPRESSION}
         }
     },
 
     { MULTIPLICATION,
         {
-            {(Token)POWER_RAISING,
-            (Token)MULTIPLICATION_P}
+            {POWER_RAISING,
+            MULTIPLICATION_P}
         }
     },
 
     { MULTIPLICATION_P,
         {
             {},
-            {(Token)MULTIPLY,
-            (Token)MULTIPLICATION},
-            {(Token)DIVIDE,
-            (Token)MULTIPLICATION},
-            {(Token)INT_DIVIDE,
-            (Token)MULTIPLICATION}
+            {MULTIPLY,
+            MULTIPLICATION},
+            {DIVIDE,
+            MULTIPLICATION},
+            {INT_DIVIDE,
+            MULTIPLICATION}
         }
     },
 
     { POWER_RAISING,
         {
-            {(Token)NUMERIC_OPERAND,
-            (Token)POWER_P}
+            {NUMERIC_OPERAND,
+            POWER_P}
         }
     },
 
     { POWER_P,
         {
             {},
-            {(Token)POWER,
-            (Token)POWER_RAISING},
+            {POWER,
+            POWER_RAISING},
         }
     },
 
     { NUMERIC_OPERAND,
         {
-            {(Token)INT_VALUE},
-            {(Token)REAL_VALUE},
-            {(Token)IDENTIFIER},
-            {(Token)FUNCTION_CALL},
-            {(Token)BRACE_OPEN,
-            (Token)NUMERIC_EXPRESSION,
-            (Token)BRACE_CLOSE}
+            {INT_VALUE},
+            {REAL_VALUE},
+            {IDENTIFIER},
+            {FUNCTION_CALL},
+            {BRACE_OPEN,
+            NUMERIC_EXPRESSION,
+            BRACE_CLOSE}
         }
     },
 
     { LOGICAL_EXPRESSION,
         {
-            {(Token)CONJUNCTION,
-            (Token)DISJUNCTION_P}
+            {CONJUNCTION,
+            DISJUNCTION_P}
         }
     },
 
     { DISJUNCTION_P,
         {
             {},
-            {(Token)OR,
-            (Token)LOGICAL_EXPRESSION}
+            {OR,
+            LOGICAL_EXPRESSION}
         }
     },
 
     { CONJUNCTION,
         {
-            {(Token)NEGATION,
-            (Token)CONJUNCTION_P}
+            {NEGATION,
+            CONJUNCTION_P}
         }
     },
 
     { CONJUNCTION_P,
         {
             {},
-            {(Token)AND,
-            (Token)CONJUNCTION}
+            {AND,
+            CONJUNCTION}
         }
     },
 
     { NEGATION,
         {
-            {(Token)COMPARISON},
-            {(Token)NOT,
-            (Token)COMPARISON}
+            {COMPARISON},
+            {NOT,
+            COMPARISON}
         }
     },
 
     { COMPARISON,
         {
-            {(Token)LOGICAL_OPERAND,
-            (Token)COMPARISON_P}
+            {LOGICAL_OPERAND,
+            COMPARISON_P}
         }
     },
 
     { COMPARISON_OPERATOR,
         {
-            {(Token)LESS_THAN},
-            {(Token)LESS_EQUAL},
-            {(Token)GREATER_THAN},
-            {(Token)GREATER_EQUAL},
-            {(Token)EQUAL},
-            {(Token)NOT_EQUAL}
+            {LESS_THAN},
+            {LESS_EQUAL},
+            {GREATER_THAN},
+            {GREATER_EQUAL},
+            {EQUAL},
+            {NOT_EQUAL}
         }
     },
 
     { COMPARISON_P,
         {
             {},
-            {(Token)COMPARISON_OPERATOR,
-            (Token)LOGICAL_OPERAND}
+            {COMPARISON_OPERATOR,
+            LOGICAL_OPERAND}
         }
     },
 
     { LOGICAL_OPERAND,
         {
-            {(Token)BOOL_VALUE},
-            {(Token) NUMERIC_EXPRESSION},
-            {(Token)BRACE_OPEN,
-            (Token)LOGICAL_EXPRESSION,
-            (Token)BRACE_CLOSE}
+            {BOOL_VALUE},
+            { NUMERIC_EXPRESSION},
+            {BRACE_OPEN,
+            LOGICAL_EXPRESSION,
+            BRACE_CLOSE}
         }
     },
 
     { INSTRUCTION_BLOCK,
         {
-            {(Token)RETURN_INSTRUCTION},
-            {(Token)INSTRUCTION,
-            (Token)INSTRUCTION_BLOCK},
+            {RETURN_INSTRUCTION},
+            {INSTRUCTION,
+            INSTRUCTION_BLOCK},
         }
     },
 
     { INSTRUCTION,
         {
-            {(Token)FUNCTION_DECLARATION},
-            {(Token)VALUE_BLOCK},
+            {FUNCTION_DECLARATION},
+            {VALUE_BLOCK},
         }
     },
 
     { RETURN_INSTRUCTION,
         {
-            {(Token)RETURN,
-            (Token)VALUE_BLOCK},
+            {RETURN,
+            VALUE_BLOCK},
         }
     },
 
     { IF_BLOCK,
         {
-            {(Token)IF_CLAUSE,
-            (Token)ELIF_CLAUSES,
-            (Token)ELSE_CLAUSE}
+            {IF_CLAUSE,
+            ELIF_CLAUSES,
+            ELSE_CLAUSE}
         }
     },
 
     { IF_CLAUSE,
         {
-            {(Token)IF,
-            (Token)BRACE_OPEN,
-            (Token)LOGICAL_EXPRESSION,
-            (Token)BRACE_CLOSE,
-            (Token)FUNCTION_BODY_BLOCK}
+            {IF,
+            BRACE_OPEN,
+            LOGICAL_EXPRESSION,
+            BRACE_CLOSE,
+            FUNCTION_BODY_BLOCK}
         }
     },
 
     { ELIF_CLAUSES,
         {
             {},
-            {(Token)ELIF_CLAUSE,
-            (Token)ELIF_CLAUSES}
+            {ELIF_CLAUSE,
+            ELIF_CLAUSES}
         }
     },
 
     { ELIF_CLAUSE,
         {
-            {(Token)ELIF,
-            (Token)BRACE_OPEN,
-            (Token)LOGICAL_EXPRESSION,
-            (Token)BRACE_CLOSE,
-            (Token)FUNCTION_BODY_BLOCK}
+            {ELIF,
+            BRACE_OPEN,
+            LOGICAL_EXPRESSION,
+            BRACE_CLOSE,
+            FUNCTION_BODY_BLOCK}
         }
     },
 
     { ELSE_CLAUSE,
         {
             {},
-            {(Token)ELSE,
-            (Token)BRACE_OPEN,
-            (Token)LOGICAL_EXPRESSION,
-            (Token)BRACE_CLOSE,
-            (Token)FUNCTION_BODY_BLOCK}
+            {ELSE,
+            BRACE_OPEN,
+            LOGICAL_EXPRESSION,
+            BRACE_CLOSE,
+            FUNCTION_BODY_BLOCK}
         }
     }
 };
