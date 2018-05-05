@@ -26,8 +26,6 @@ namespace TokenType {
                         ARG_LIST, ARG_LIST_P,
                         VALUE_LIST, VALUE_LIST_P,
                         TYPE, TYPE_LIST, TYPE_LIST_P,
-                        LAMBDA_TYPE_LIST,
-                        LAMBDA_TYPE, LAMBDA,
 
                         VALUE_BLOCK, VALUE_EXPRESSION,
 
