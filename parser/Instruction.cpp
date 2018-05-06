@@ -23,7 +23,7 @@ void Parser::parseInstructionBlock() {
             parseInstructionBlock();
             break;
         case RETURN:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseValueBlock();
             break;
         default:

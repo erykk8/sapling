@@ -3,8 +3,8 @@
 using namespace TokenType;
 
 void Parser::parseProgram() {
+    nextToken = scanner->getNextToken();
     while(true) {
-        nextToken = scanner.getNextToken();
         switch(nextToken) {
             case EOT:
                 return;
@@ -13,6 +13,7 @@ void Parser::parseProgram() {
             case BOOL_TYPE:
             case STRING_TYPE:
                 parseFunctionDeclaration();
+                break;
             default:
                 throw std::runtime_error("Unexpected token");
         }

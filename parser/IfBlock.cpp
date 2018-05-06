@@ -17,12 +17,12 @@ void Parser::parseIfBlock() {
 void Parser::parseIfClause() {
     switch(nextToken) {
         case IF:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseLogicalExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseFunctionBodyBlock();
             break;
         default:
@@ -33,12 +33,12 @@ void Parser::parseIfClause() {
 void Parser::parseElifClauses() {
     switch(nextToken) {
         case ELIF:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseLogicalExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseFunctionBodyBlock();
             break;
         default:
@@ -49,7 +49,7 @@ void Parser::parseElifClauses() {
 void Parser::parseElseClause() {
     switch(nextToken) {
         case ELSE:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseFunctionBodyBlock();
             break;
         default:

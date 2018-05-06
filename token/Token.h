@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace TokenType {
-    enum Type   {   // terminal
+    enum Type   {
                     IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
                         INT_TYPE, BOOL_TYPE, REAL_TYPE, STRING_TYPE, VOID_TYPE,
                         NOT, AND, OR,
@@ -16,39 +17,7 @@ namespace TokenType {
                         BRACE_OPEN, BRACE_CLOSE,
                         SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
                         EOT,
-
-                     // non-terminal
-                    PROGRAM,
-                        FUNCTION_DECLARATION, FUNCTION_CALL,
-                        FUNCTION_BODY_BLOCK, VALUE_OR_INSTRUCTION_BLOCK,
-
-                        PARAMETER_DECLARATION, PARAMETER_CALL,
-                        ARG_LIST, ARG_LIST_P,
-                        VALUE_LIST, VALUE_LIST_P,
-                        TYPE, TYPE_LIST, TYPE_LIST_P,
-
-                        VALUE_BLOCK, VALUE_EXPRESSION,
-
-                        LOGICAL_EXPRESSION,
-                        DISJUNCTION_P,
-                        CONJUNCTION, CONJUNCTION_P,
-                        NEGATION,
-                        COMPARISON, COMPARISON_P,
-                        COMPARISON_OPERATOR,
-                        LOGICAL_OPERAND,
-
-                        NUMERIC_EXPRESSION,
-                        ADDITION_P,
-                        MULTIPLICATION, MULTIPLICATION_P,
-                        POWER_RAISING, POWER_P,
-                        NUMERIC_OPERAND,
-
-                        INSTRUCTION_BLOCK, INSTRUCTION,
-                        RETURN_INSTRUCTION,
-                        IF_BLOCK, IF_CLAUSE,
-                        ELIF_CLAUSES, ELIF_CLAUSE,
-                        ELSE_CLAUSE
-                    };
+                };
 }
 
 class Token {
@@ -65,6 +34,8 @@ class Token {
         double getReal() const;
         std::string getString() const;
 
+        std::string getName() const;
+
         void setInt(int value);
         void setBool(bool value);
         void setReal(double value);
@@ -72,9 +43,15 @@ class Token {
 
         void setOtherValue(std::string value);
 
+        void setLine(int line);
+        void setPosition(int position);
+
         bool operator==(const TokenType::Type type) const;
         bool operator!=(const TokenType::Type type) const;
         operator TokenType::Type() const { return type; }
+
+        int getLine() const;
+        int getPosition() const;
 
     private:
         int line;
@@ -87,4 +64,5 @@ class Token {
         };
         std::string string; // lazy
 
+        static std::vector<std::string> names;
 };

@@ -5,10 +5,12 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(Token "")
 add_library(Scanner "")
+# add_library(AST "")
 add_library(Parser "")
 
 include(token/CMakeLists.txt)
 include(scanner/CMakeLists.txt)
+# include(ast/CMakeLists.txt)
 include(parser/CMakeLists.txt)
 include(tests/CMakeLists.txt)
 

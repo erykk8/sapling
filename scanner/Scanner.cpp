@@ -16,17 +16,18 @@ void Scanner::readNextToken() {
         reader->skip(whiteSpace);
     }
 
+    int line = reader->getLine();
+    int position = reader->getPosition();
+
     if (eotToken()) {
         currentToken = TokenType::EOT;
-        return;
     }
+    else if (alphaToken() || braceToken() || separatorToken() || valueToken()
+        || operatorToken() || equalsCharacterToken() );
+    else throwUnknownToken();
 
-    if (alphaToken() || braceToken() || separatorToken() || valueToken()
-        || operatorToken() || equalsCharacterToken() )
-        return;
-
-    throwUnknownToken();
-        
+    currentToken.setLine(line);
+    currentToken.setPosition(position); 
 }
 
 void Scanner::throwUnknownToken() {

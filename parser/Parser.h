@@ -1,18 +1,21 @@
 #pragma once
 #include "../token/Token.h"
 #include "../scanner/Scanner.h"
+// #include "../ast/Program.h"
 
 #include <stack>
 #include <map>
+#include <memory>
 
 class Parser {
     public:
         void parse();
-        Parser(Scanner &s);
+        Parser(std::shared_ptr<Scanner> s);
         ~Parser() = default;
     private:
-        Scanner& scanner;
+        std::shared_ptr<Scanner> scanner;
         Token nextToken;
+        // Program program;
 
         // Program.cpp
         void parseProgram();

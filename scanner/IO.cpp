@@ -5,7 +5,14 @@
 
 int StreamReader::nextChar() {
     char c;
-    if(stream->get(c)) return c;
+    if(stream->get(c)) {
+        position++;
+        if(c == '\n') {
+            position = 0;
+            line++;
+        }
+        return c;
+    }
     else return -1;
 }
 
@@ -15,11 +22,26 @@ int StreamReader::peekChar() {
 }
 
 void StreamReader::skipLine() {
+    line++;
+    position=0;
     stream->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 void StreamReader::skip(std::function<bool(char)> predicate) {
     while(stream->peek() != EOF && predicate(stream->peek())) {
-        stream->get();
+        position++;
+        char c = stream->get();
+        if(c == '\n') {
+            position = 0;
+            line++;
+        }
     }
+}
+
+int StreamReader::getLine() {
+    return line;
+}
+
+int StreamReader::getPosition() {
+    return position;
 }

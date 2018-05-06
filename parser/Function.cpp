@@ -5,10 +5,10 @@ using namespace TokenType;
 void Parser::parseFunctionBodyBlock() {
     switch(nextToken) {
         case CURLY_BRACE_OPEN:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseInstructionBlock();
             if(nextToken != CURLY_BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
         case IF:
         case STRING_VALUE:
@@ -31,15 +31,15 @@ void Parser::parseFunctionDeclaration() {
         case REAL_TYPE:
         case BOOL_TYPE:
         case STRING_TYPE:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
             
-            nextToken = scanner.getNextToken();
-            parseParameterDeclaration();
+            nextToken = scanner->getNextToken();
+            if(nextToken == BRACE_OPEN) parseParameterDeclaration();
 
             if(nextToken != ASSIGNMENT_OPERATOR) throw std::runtime_error("Unexpected token");
             
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseFunctionBodyBlock();
             break;
         default:
@@ -50,10 +50,10 @@ void Parser::parseFunctionDeclaration() {
 void Parser::parseParameterDeclaration() {
     switch(nextToken) {
         case BRACE_OPEN:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseArgList();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
         default:
             throw std::runtime_error("Unexpected token");
@@ -63,9 +63,8 @@ void Parser::parseParameterDeclaration() {
 void Parser::parseFunctionCall() {
     switch(nextToken) {
         case IDENTIFIER:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             if(nextToken == BRACE_OPEN) {
-                nextToken = scanner.getNextToken();
                 parseParameterCall();
             }
             break;
@@ -77,10 +76,10 @@ void Parser::parseFunctionCall() {
 void Parser::parseParameterCall() {
     switch(nextToken) {
         case BRACE_OPEN:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseValueList();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
         default:
             throw std::runtime_error("Unexpected token");
@@ -100,7 +99,7 @@ void Parser::parseValueList() {
         case IDENTIFIER:
             parseValueExpression();
             while(nextToken == COMMA) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseValueExpression();
             }
             break;
@@ -115,11 +114,11 @@ void Parser::parseArgList() {
         case REAL_TYPE:
         case BOOL_TYPE:
         case STRING_TYPE:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             while(nextToken == COMMA) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 switch(nextToken) {
                     case INT_TYPE:
                     case REAL_TYPE:
@@ -129,9 +128,9 @@ void Parser::parseArgList() {
                     default:
                         throw std::runtime_error("Unexpected token");
                 }
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
             }
             break;
         case BRACE_CLOSE:

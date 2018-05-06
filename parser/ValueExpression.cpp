@@ -5,7 +5,7 @@ using namespace TokenType;
 void Parser::parseValueExpression() {
     switch(nextToken) {
         case STRING_VALUE:       
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
         case NOT:
         case BRACE_OPEN:
@@ -30,7 +30,7 @@ void Parser::parseLogicalExpression() {
         case IDENTIFIER:
             parseConjunction();
             if(nextToken == OR) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseLogicalExpression();
             }
             break;
@@ -49,7 +49,7 @@ void Parser::parseConjunction() {
         case IDENTIFIER:
             parseNegation();
             if(nextToken == AND) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseConjunction();
             }
             break;
@@ -61,7 +61,7 @@ void Parser::parseConjunction() {
 void Parser::parseNegation() {
     switch(nextToken) {
         case NOT:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             parseComparison();
             break;
         case BRACE_OPEN:
@@ -91,7 +91,7 @@ void Parser::parseComparison() {
                 case GREATER_THAN:
                 case EQUAL:
                 case NOT_EQUAL:
-                    nextToken = scanner.getNextToken();
+                    nextToken = scanner->getNextToken();
                     parseLogicalOperand();
                     break;
                 default:
@@ -105,14 +105,10 @@ void Parser::parseComparison() {
 
 void Parser::parseLogicalOperand() {
     switch(nextToken) {
-        case BRACE_OPEN:
-            nextToken = scanner.getNextToken();
-            parseLogicalExpression();
-            if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
         case BOOL_VALUE:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
+        case BRACE_OPEN:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
@@ -131,11 +127,11 @@ void Parser::parseNumericExpression() {
         case IDENTIFIER:
             parseMultiplication();
             if(nextToken == ADD) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseNumericExpression();
             }
             else if(nextToken == SUBTRACT) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseNumericExpression();
             }
             break;
@@ -152,15 +148,15 @@ void Parser::parseMultiplication() {
         case IDENTIFIER:
             parsePowerRaising();
             if(nextToken == MULTIPLY) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseMultiplication();
             }
             else if(nextToken == DIVIDE) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseMultiplication();
             }
             else if(nextToken == INT_DIVIDE) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parseMultiplication();
             }
             break;
@@ -177,7 +173,7 @@ void Parser::parsePowerRaising() {
         case IDENTIFIER:
             parseNumericOperand();
             if(nextToken == POWER) {
-                nextToken = scanner.getNextToken();
+                nextToken = scanner->getNextToken();
                 parsePowerRaising();
             }
             break;
@@ -189,13 +185,14 @@ void Parser::parsePowerRaising() {
 void Parser::parseNumericOperand() {
     switch(nextToken) {
         case BRACE_OPEN:
-            nextToken = scanner.getNextToken();
-            parseNumericExpression();
+            nextToken = scanner->getNextToken();
+            parseLogicalExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
+            break;
         case INT_VALUE:
         case REAL_VALUE:
-            nextToken = scanner.getNextToken();
+            nextToken = scanner->getNextToken();
             break;
         case IDENTIFIER:
             parseFunctionCall();
