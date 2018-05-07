@@ -6,7 +6,6 @@
 using namespace TokenType;
 
 int IntValue::evaluate(std::shared_ptr<Scope> scope) {
-    std::cout << "int eval" << std::endl;
     return value.getInt();
 }
 

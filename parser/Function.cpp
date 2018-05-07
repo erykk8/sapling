@@ -41,9 +41,6 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
             }
             function->parameters = paramList;
 
-            // add self to scope to allow recursive calling
-            currentScope->functions[function->identifier] = function;
-
             if(nextToken != ASSIGNMENT_OPERATOR) throw std::runtime_error("Unexpected token");
             
             nextToken = scanner->getNextToken();
@@ -98,7 +95,7 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
                 }
 
                 for(int i = 0; i < parameterValues.size(); ++i) {
-                funcCall->parameterScope->identifiers[function->parameters[i].name] = parameterValues[i];
+                funcCall->parameters[function->parameters[i].name] = parameterValues[i];
                 }
             }            
             break;
@@ -149,14 +146,21 @@ std::vector<Parameter> Parser::parseArgList() {
     Parameter parameter;
     switch(nextToken) {
         case INT_TYPE:
-            do {
+             parameter.type = nextToken;
+            nextToken = scanner->getNextToken();
+            if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
+            parameter.name = nextToken.getString();
+            nextToken = scanner->getNextToken();
+            parameters.push_back(parameter);
+            while(nextToken == COMMA) {
+                nextToken = scanner->getNextToken();
                 parameter.type = nextToken;
                 nextToken = scanner->getNextToken();
                 if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
                 parameter.name = nextToken.getString();
                 nextToken = scanner->getNextToken();
                 parameters.push_back(parameter);
-            } while(nextToken == COMMA);
+            }
             break;
         case BRACE_CLOSE:
             break;

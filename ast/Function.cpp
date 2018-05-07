@@ -1,44 +1,31 @@
 #include "Function.h"
 #include <iostream>
-
-std::shared_ptr<Expression> Scope::getValue(std::string name) {
-    auto it = identifiers.find(name);
-    if(it != identifiers.end()) {
-        return it->second;
-    }
-
-    auto it2 = functions.find(name);
-
-    if(it2 != functions.end()) {
-        return it2->second->body.returnExpression;
-    }
-
-    if(enclosingScope) {
-        return enclosingScope->getValue(name);
-    }
-
-    throw std::runtime_error("Identifier " + name + " not found in current scope");
-}
+#include <memory>
 
 int InstructionBlock::evaluate(std::shared_ptr<Scope> scope) {
-    std::cout << "ins block eval" << std::endl;
     return returnExpression->evaluate(scope);
 }
 
-int FunctionCall::evaluate(std::shared_ptr<Scope> scope) {
-    if(!isSet) {
-        parameterScope->enclosingScope = scope;
-        if(isParameter) {
-            value = scope->getValue(functionName)->evaluate(scope);
-        }
-        else {
-            value = scope->getValue(functionName)->evaluate(parameterScope);
-        }
-        isSet = true;
-    }
-    return value;
+int Function::evaluate(std::map<std::string, std::shared_ptr<Expression>> parameters, std::shared_ptr<Scope> evalScope) {
+    scope = std::make_shared<Scope>();
+    scope->functions = evalScope->functions;
+    scope->parameters = parameters;
+
+    return body.evaluate(scope);
 }
 
-FunctionCall::FunctionCall() {
-    parameterScope = std::make_shared<Scope>();
+int FunctionCall::evaluate(std::shared_ptr<Scope> scope) {
+    auto it = scope->parameters.find(functionName);
+    if(it != scope->parameters.end()) {
+        return it->second->evaluate(scope->enclosingScope);
+    }
+    auto it2 = scope->functions.find(functionName);
+    if(it2 != scope->functions.end()) {
+        if(parameters.size() > 0) {
+            return it2->second->evaluate(parameters, scope);
+        }
+        else {
+            return it2->second->body.evaluate(scope);
+        }
+    }
 }

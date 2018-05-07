@@ -10,16 +10,10 @@
 struct Function;
 
 struct Scope {
-        Scope() : enclosingScope(nullptr) {}
-        ~Scope() = default;
-
-        std::shared_ptr<Expression> getValue(std::string name);
-        
-        std::map<std::string, std::shared_ptr<Expression>> identifiers;
+        std::map<std::string, std::shared_ptr<Expression>> parameters;
         std::map<std::string, std::shared_ptr<Function>> functions;
 
         std::shared_ptr<Scope> enclosingScope;
-        
 };
 
 struct InstructionBlock {
@@ -32,16 +26,14 @@ struct Function {
     std::string identifier;
     std::vector<Parameter> parameters;
     InstructionBlock body;
+    std::shared_ptr<Scope> scope;
+
+    int evaluate(std::map<std::string, std::shared_ptr<Expression>> parameters, std::shared_ptr<Scope> scope);
 };
 
 struct FunctionCall : Expression {
-    FunctionCall();
-    ~FunctionCall() = default;
     std::string functionName;
-    std::shared_ptr<Scope> parameterScope;
-    int evaluate(std::shared_ptr<Scope> scope);
+    std::map<std::string, std::shared_ptr<Expression>> parameters;
 
-    bool isParameter = false;
-    bool isSet = false;
-    int value;
+    int evaluate(std::shared_ptr<Scope> scope); 
 };
