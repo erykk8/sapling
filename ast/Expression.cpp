@@ -102,9 +102,5 @@ int Disjunction::evaluate(std::shared_ptr<Scope> scope) {
 }
 
 int LogicalExpression::evaluate(std::shared_ptr<Scope> scope) {
-    if(!isSet) {
-        value = a.evaluate(scope);
-        isSet = true;
-    }
-    return value;
+    return a.evaluate(scope);
 }

@@ -92,7 +92,4 @@ class LogicalExpression : public Expression {
     public:
         Disjunction a;
         int evaluate(std::shared_ptr<Scope> scope);
-    private:
-        bool isSet = false;
-        int value; 
 };
