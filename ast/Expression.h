@@ -88,8 +88,11 @@ struct Disjunction {
     int evaluate(std::shared_ptr<Scope> scope);
 };
 
-struct LogicalExpression : Expression {
-    Disjunction a;
-
-    int evaluate(std::shared_ptr<Scope> scope);
+class LogicalExpression : public Expression {
+    public:
+        Disjunction a;
+        int evaluate(std::shared_ptr<Scope> scope);
+    private:
+        bool isSet = false;
+        int value; 
 };

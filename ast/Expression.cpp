@@ -6,6 +6,7 @@
 using namespace TokenType;
 
 int IntValue::evaluate(std::shared_ptr<Scope> scope) {
+    std::cout << "int eval" << std::endl;
     return value.getInt();
 }
 
@@ -102,5 +103,9 @@ int Disjunction::evaluate(std::shared_ptr<Scope> scope) {
 }
 
 int LogicalExpression::evaluate(std::shared_ptr<Scope> scope) {
-    return a.evaluate(scope);
+    if(!isSet) {
+        value = a.evaluate(scope);
+        isSet = true;
+    }
+    return value;
 }

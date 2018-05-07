@@ -40,4 +40,8 @@ struct FunctionCall : Expression {
     std::string functionName;
     std::shared_ptr<Scope> parameterScope;
     int evaluate(std::shared_ptr<Scope> scope);
+
+    bool isParameter = false;
+    bool isSet = false;
+    int value;
 };
