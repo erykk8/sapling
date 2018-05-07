@@ -11,7 +11,7 @@ InstructionBlock Parser::parseInstructionBlock() {
         case INT_VALUE:
         case IDENTIFIER:        
             instructions.returnExpression = parseValueBlock();
-            return instructions;
+            break;
         case INT_TYPE:
             while(nextToken != RETURN) {
                 if(nextToken == INT_TYPE) {
@@ -23,10 +23,11 @@ InstructionBlock Parser::parseInstructionBlock() {
         case RETURN:
             nextToken = scanner->getNextToken();
             instructions.returnExpression = parseValueBlock();
-            return instructions;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return instructions;
 }
 
 std::shared_ptr<Expression> Parser::parseValueBlock() {

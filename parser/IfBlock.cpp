@@ -9,10 +9,11 @@ std::shared_ptr<IfBlock> Parser::parseIfBlock() {
             ifBlock->ifClause = parseIfClause();
             while(nextToken == ELIF) ifBlock->elifClauses.push_back(parseElifClauses());
             ifBlock->elseClause = parseElseClause();
-            return ifBlock;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return ifBlock;
 }
 
 ConditionalClause Parser::parseIfClause() {

@@ -6,13 +6,12 @@ void Parser::parseProgram() {
     std::shared_ptr<Function> function;
     nextToken = scanner->getNextToken();
     while(true) {
-        currentScope = program;
+        currentScope = program->scope;
         switch(nextToken) {
             case EOT:
                 return;
             case INT_TYPE:
-                function = parseFunctionDeclaration();
-                currentScope->functions[function->identifier] = function;
+                parseFunctionDeclaration();
                 break;
             default:
                 throw std::runtime_error("Unexpected token");

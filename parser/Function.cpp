@@ -39,12 +39,16 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
             if(nextToken == BRACE_OPEN) {
                 paramList = parseParameterDeclaration();
             }
+            function->parameters = paramList;
+
+            // add self to scope to allow recursive calling
+            currentScope->functions[function->identifier] = function;
 
             if(nextToken != ASSIGNMENT_OPERATOR) throw std::runtime_error("Unexpected token");
             
             nextToken = scanner->getNextToken();
             function->body = parseFunctionBodyBlock();
-            function->parameters = paramList;
+            
             return function;
         default:
             throw std::runtime_error("Unexpected token");
@@ -52,39 +56,51 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
 }
 
 std::vector<Parameter> Parser::parseParameterDeclaration() {
+    std::vector<Parameter> paramList;
     switch(nextToken) {
         case BRACE_OPEN:
             nextToken = scanner->getNextToken();
-            parseArgList();
+            paramList = parseArgList();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return paramList;
 }
 
 std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
     auto funcCall = std::make_shared<FunctionCall>();
     std::vector<std::shared_ptr<Expression>> parameterValues;
     std::shared_ptr<Function> function;
+    auto it = currentScope->functions.end();
     switch(nextToken) {
         case IDENTIFIER:
             funcCall->functionName = nextToken.getString();
-            function = currentScope->functions[funcCall->functionName];
+
             nextToken = scanner->getNextToken();
 
             if(nextToken == BRACE_OPEN) {
                 parameterValues = parseParameterCall();
             }
-            if(function->parameters.size() != parameterValues.size()) {
-                throw std::runtime_error("Not enough arguments given to function");
-            }
 
-            for(int i = 0; i < parameterValues.size(); ++i) {
+            if(parameterValues.size() > 0) {
+                // its an actual function, find it and its parameters
+                it = currentScope->functions.find(funcCall->functionName);
+                if(it == currentScope->functions.end()) {
+                    throw std::runtime_error("Call to previously undefined function");
+                }
+                function = it->second;
+
+                if(function->parameters.size() != parameterValues.size()) {
+                    throw std::runtime_error("Not enough arguments given to function");
+                }
+
+                for(int i = 0; i < parameterValues.size(); ++i) {
                 funcCall->parameterScope->identifiers[function->parameters[i].name] = parameterValues[i];
-            }
-            
+                }
+            }            
             break;
         default:
             throw std::runtime_error("Unexpected token");

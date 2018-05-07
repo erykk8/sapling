@@ -10,10 +10,11 @@ std::shared_ptr<LogicalExpression> Parser::parseValueExpression() {
         case INT_VALUE:
         case IDENTIFIER:
             expression->a = *parseLogicalExpression();
-            return expression;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return expression;
 }
 
 std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
@@ -28,10 +29,11 @@ std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
                 nextToken = scanner->getNextToken();
                 expression->b = parseLogicalExpression();
             }
-            return expression;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return expression;
 }
 
 std::shared_ptr<Conjunction> Parser::parseConjunction() {
@@ -46,10 +48,11 @@ std::shared_ptr<Conjunction> Parser::parseConjunction() {
                 nextToken = scanner->getNextToken();
                 conjunction->b = parseConjunction();
             }
-            return conjunction;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return conjunction;
 }
 
 std::shared_ptr<Negation> Parser::parseNegation() {

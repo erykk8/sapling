@@ -193,7 +193,9 @@ BOOST_AUTO_TEST_CASE(or_keyword) {
 
 BOOST_AUTO_TEST_CASE(identifier) {
     Scanner s = makeScannerFromString("functionName_123");
-    BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::IDENTIFIER);
+    Token t = s.getNextToken();
+    BOOST_CHECK_EQUAL(t, TokenType::IDENTIFIER);
+    BOOST_CHECK_EQUAL(t.getString(), "functionName_123");
 }
 
 BOOST_AUTO_TEST_CASE(comma) {

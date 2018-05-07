@@ -4,8 +4,10 @@
 bool Scanner::alphaToken() {
     std::stringstream buf;
 
-    while(alphanumericOrUnderscore(reader->peekChar())) {
-        buf << (char)reader->nextChar();
+    if(alphaOrUnderscore(reader->peekChar())) {
+        while(alphaOrUnderscore(reader->peekChar()) || isdigit(reader->peekChar())) {
+            buf << (char)reader->nextChar();
+        }
     }
 
     // lazy
@@ -45,6 +47,7 @@ bool Scanner::alphaToken() {
     }
     else if(buf.str().length() > 0) {
         currentToken = TokenType::IDENTIFIER;
+        currentToken.setString(buf.str());
     }
     else return false;
 

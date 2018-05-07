@@ -10,7 +10,7 @@ class Scanner {
         Token getNextToken();
     private:
         static std::function<bool(int)> whiteSpace;
-        static std::function<bool(int)> alphanumericOrUnderscore;
+        static std::function<bool(int)> alphaOrUnderscore;
         static std::function<bool(int)> digit;
         static std::function<bool(int)> stringable;
 

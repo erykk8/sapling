@@ -4,7 +4,7 @@
 
 std::function<bool(int)> Scanner::whiteSpace = isspace;
         
-std::function<bool(int)> Scanner::alphanumericOrUnderscore = [](int c) -> bool { 
+std::function<bool(int)> Scanner::alphaOrUnderscore = [](int c) -> bool { 
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
 };
 

@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Function.h"
-#include <list>
+#include <memory>
 
-struct Program : public Scope {
+struct Program {
+    Program();
+    ~Program() = default;
+    std::shared_ptr<Scope> scope;
     int evaluate();
 };
