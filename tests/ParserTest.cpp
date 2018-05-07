@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(many_complex_functions_are_parsed) {
                                     "}"
                                     "Bool z = {\n"
                                     "return if (x == 2) True\n"
-                                    "elif (x == 314) False\n"
+                                    "else False\n"
                                     "}");
     BOOST_CHECK_NO_THROW(p.parse());
 }
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(numeric_expression_is_parsed) {
 }
 
 BOOST_AUTO_TEST_CASE(logical_expression_is_parsed) {
-    Parser p = makeParserFromString("Bool x = (50*2 <= 100) and (2 + 2 == 4) or False");
+    Parser p = makeParserFromString("Bool x = (50*2 <= 100) and 2 + 2 == 4 or False");
     BOOST_CHECK_NO_THROW(p.parse());
 }
 
@@ -92,6 +92,19 @@ BOOST_AUTO_TEST_CASE(dangling_operator_is_not_parsed) {
 BOOST_AUTO_TEST_CASE(missing_braces_are_not_parsed) {
     Parser p = makeParserFromString("Int x = (3 + 4 - 6) * (2*2");
     BOOST_CHECK_THROW(p.parse(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(complex_if_block_is_parsed) {
+    Parser p = makeParserFromString("Int x = if(2 == 2) {\n"
+                                    "Int y = 2+2\n"
+                                    "Int z = y^2\n"
+                                    "return if(z == 16) 1\n"
+                                    "else -1\n"
+                                    "}\n"
+                                    "elif(2 > 2) -2\n"
+                                    "elif (2 < 2) -3\n"
+                                    "else 0");
+    BOOST_CHECK_NO_THROW(p.parse());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

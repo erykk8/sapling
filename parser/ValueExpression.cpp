@@ -2,25 +2,23 @@
 
 using namespace TokenType;
 
-void Parser::parseValueExpression() {
+std::shared_ptr<LogicalExpression> Parser::parseValueExpression() {
+    auto expression = std::make_shared<LogicalExpression>();
     switch(nextToken) {
-        case STRING_VALUE:       
-            nextToken = scanner->getNextToken();
-            break;
         case NOT:
         case BRACE_OPEN:
         case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
-            parseLogicalExpression();
-            break;
+            expression->a = *parseLogicalExpression();
+            return expression;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseLogicalExpression() {
+std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
+    auto expression = std::make_shared<Disjunction>();
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
@@ -28,18 +26,19 @@ void Parser::parseLogicalExpression() {
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseConjunction();
+            expression->a = *parseConjunction();
             if(nextToken == OR) {
                 nextToken = scanner->getNextToken();
-                parseLogicalExpression();
+                expression->b = parseLogicalExpression();
             }
-            break;
+            return expression;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseConjunction() {
+std::shared_ptr<Conjunction> Parser::parseConjunction() {
+    auto conjunction = std::make_shared<Conjunction>();
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
@@ -47,43 +46,48 @@ void Parser::parseConjunction() {
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseNegation();
+            conjunction->a = *parseNegation();
             if(nextToken == AND) {
                 nextToken = scanner->getNextToken();
-                parseConjunction();
+                conjunction->b = parseConjunction();
             }
-            break;
+            return conjunction;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseNegation() {
+std::shared_ptr<Negation> Parser::parseNegation() {
+    auto negation = std::make_shared<Negation>();
     switch(nextToken) {
         case NOT:
+            negation->isActuallyNegation = true;
             nextToken = scanner->getNextToken();
-            parseComparison();
+            negation->a = *parseComparison();
             break;
         case BRACE_OPEN:
         case BOOL_VALUE:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseComparison();
+            negation->isActuallyNegation = false;
+            negation->a = *parseComparison();
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return negation;
 }
 
-void Parser::parseComparison() {
+std::shared_ptr<Comparison> Parser::parseComparison() {
+    auto comparison = std::make_shared<Comparison>();
     switch(nextToken) {
         case BRACE_OPEN:
         case BOOL_VALUE:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseLogicalOperand();
+            comparison->a = parseLogicalOperand();
             switch(nextToken) {
                 case LESS_EQUAL:
                 case LESS_THAN:
@@ -91,8 +95,9 @@ void Parser::parseComparison() {
                 case GREATER_THAN:
                 case EQUAL:
                 case NOT_EQUAL:
+                    comparison->op = nextToken;
                     nextToken = scanner->getNextToken();
-                    parseLogicalOperand();
+                    comparison->b = parseLogicalOperand();
                     break;
                 default:
                     break;
@@ -103,61 +108,69 @@ void Parser::parseComparison() {
     }
 }
 
-void Parser::parseLogicalOperand() {
+std::shared_ptr<Expression> Parser::parseLogicalOperand() {
+    auto numericExpression = std::make_shared<NumericExpression>();
+    auto value = std::make_shared<IntValue>();
     switch(nextToken) {
         case BOOL_VALUE:
+            value->value = nextToken;
             nextToken = scanner->getNextToken();
-            break;
+            return value;
         case BRACE_OPEN:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseNumericExpression();
-            break;
+            numericExpression->a = *parseNumericExpression();
+            return numericExpression;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseNumericExpression() {
+std::shared_ptr<Addition> Parser::parseNumericExpression() {
+    auto expression = std::make_shared<Addition>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseMultiplication();
+            expression->a = *parseMultiplication();
             if(nextToken == ADD) {
                 nextToken = scanner->getNextToken();
-                parseNumericExpression();
+                expression->isSubtraction = false;
+                expression->b = parseNumericExpression();
             }
             else if(nextToken == SUBTRACT) {
                 nextToken = scanner->getNextToken();
-                parseNumericExpression();
+                expression->isSubtraction = true;
+                expression->b = parseNumericExpression();
             }
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return expression;
 }
 
-void Parser::parseMultiplication() {
+std::shared_ptr<Multiplication> Parser::parseMultiplication() {
+    auto multiplication = std::make_shared<Multiplication>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parsePowerRaising();
+            multiplication->a = *parsePowerRaising();
             if(nextToken == MULTIPLY) {
                 nextToken = scanner->getNextToken();
-                parseMultiplication();
+                multiplication->b = parseMultiplication();
             }
             else if(nextToken == DIVIDE) {
                 nextToken = scanner->getNextToken();
-                parseMultiplication();
+                multiplication->b = parseMultiplication();
             }
             else if(nextToken == INT_DIVIDE) {
                 nextToken = scanner->getNextToken();
-                parseMultiplication();
+                multiplication->b = parseMultiplication();
             }
             break;
         default:
@@ -165,16 +178,17 @@ void Parser::parseMultiplication() {
     }
 }
 
-void Parser::parsePowerRaising() {
+std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
+    auto power = std::make_shared<PowerRaising>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseNumericOperand();
+            power->base = parseNumericOperand();
             if(nextToken == POWER) {
                 nextToken = scanner->getNextToken();
-                parsePowerRaising();
+                power->power = parsePowerRaising();
             }
             break;
         default:
@@ -182,21 +196,24 @@ void Parser::parsePowerRaising() {
     }
 }
 
-void Parser::parseNumericOperand() {
+std::shared_ptr<Expression> Parser::parseNumericOperand() {
+    auto intValue = std::make_shared<IntValue>();
+    auto funcCall = std::make_shared<FunctionCall>();
+    auto expression = std::make_shared<LogicalExpression>();
     switch(nextToken) {
         case BRACE_OPEN:
             nextToken = scanner->getNextToken();
-            parseLogicalExpression();
+            expression = parseValueExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            break;
+            return expression;
         case INT_VALUE:
-        case REAL_VALUE:
+            intValue->value = nextToken;
             nextToken = scanner->getNextToken();
-            break;
+            return intValue;
         case IDENTIFIER:
-            parseFunctionCall();
-            break;
+            funcCall = parseFunctionCall();
+            return funcCall;
         default:
             throw std::runtime_error("Unexpected token");
     }

@@ -1,7 +1,9 @@
 #include "Parser.h"
 #include <iostream>
 
-Parser::Parser(std::shared_ptr<Scanner> s) : scanner(s) {}
+Parser::Parser(std::shared_ptr<Scanner> s) : scanner(s) {
+    program = std::make_shared<Program>();
+}
 
 void Parser::parse() {
     try {

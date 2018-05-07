@@ -2,7 +2,8 @@
 
 using namespace TokenType;
 
-void Parser::parseInstructionBlock() {
+InstructionBlock Parser::parseInstructionBlock() {
+    InstructionBlock instructions;
     switch(nextToken) {
         case IF:
         case STRING_VALUE:
@@ -12,29 +13,37 @@ void Parser::parseInstructionBlock() {
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:        
-            parseValueBlock();
-            parseInstructionBlock();
-            break;
+            instructions.returnExpression = parseValueBlock();
+            return instructions;
         case INT_TYPE:
         case REAL_TYPE:
         case BOOL_TYPE:
         case STRING_TYPE:
-            parseFunctionDeclaration();
-            parseInstructionBlock();
-            break;
+            while(nextToken != RETURN) {
+                switch(nextToken) {
+                    case INT_TYPE:
+                    case REAL_TYPE:
+                    case BOOL_TYPE:
+                    case STRING_TYPE:
+                        auto function = parseFunctionDeclaration();
+                        currentScope->functions.push_back(function);
+                }
+            }
+            if(nextToken != RETURN) throw std::runtime_error("Unexpected token");
         case RETURN:
             nextToken = scanner->getNextToken();
-            parseValueBlock();
-            break;
+            instructions.returnExpression = parseValueBlock();
+            return instructions;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseValueBlock() {
+std::shared_ptr<Expression> Parser::parseValueBlock() {
+    std::shared_ptr<Expression> expression;
     switch(nextToken) {
         case IF:
-            parseIfBlock();
+            expression = parseIfBlock();
             break;
         case STRING_VALUE:
         case NOT:
@@ -43,8 +52,8 @@ void Parser::parseValueBlock() {
         case INT_VALUE:
         case REAL_VALUE:
         case IDENTIFIER:
-            parseValueExpression();
-            break;
+            expression = parseValueExpression();
+            return expression;
         default:
             throw std::runtime_error("Unexpected token");
     }

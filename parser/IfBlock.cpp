@@ -2,56 +2,60 @@
 
 using namespace TokenType;
 
-void Parser::parseIfBlock() {
+std::shared_ptr<IfBlock> Parser::parseIfBlock() {
+    std::shared_ptr<IfBlock> ifBlock;
     switch(nextToken) {
         case IF:       
-            parseIfClause();
-            while(nextToken == ELIF) parseElifClauses();
-            if(nextToken == ELSE) parseElseClause();
-            break;
+            ifBlock->ifClause = parseIfClause();
+            while(nextToken == ELIF) ifBlock->elifClauses.push_back(parseElifClauses());
+            ifBlock->elseClause = parseElseClause();
+            return ifBlock;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseIfClause() {
+ConditionalClause Parser::parseIfClause() {
+    ConditionalClause clause;
     switch(nextToken) {
         case IF:
             nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            parseLogicalExpression();
+            clause.condition.a = *parseLogicalExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            parseFunctionBodyBlock();
-            break;
+            clause.body = parseFunctionBodyBlock();
+            return clause;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseElifClauses() {
+ConditionalClause Parser::parseElifClauses() {
+    ConditionalClause clause;
     switch(nextToken) {
         case ELIF:
             nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            parseLogicalExpression();
+            clause.condition.a = *parseLogicalExpression();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            parseFunctionBodyBlock();
-            break;
+            clause.body = parseFunctionBodyBlock();
+            return clause;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-void Parser::parseElseClause() {
+ConditionalClause Parser::parseElseClause() {
+    ConditionalClause clause;
     switch(nextToken) {
         case ELSE:
             nextToken = scanner->getNextToken();
-            parseFunctionBodyBlock();
-            break;
+            clause.body = parseFunctionBodyBlock();
+            return clause;
         default:
             throw std::runtime_error("Unexpected token");
     }

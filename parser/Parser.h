@@ -1,10 +1,12 @@
 #pragma once
 #include "../token/Token.h"
 #include "../scanner/Scanner.h"
-// #include "../ast/Program.h"
+#include "../ast/Program.h"
+#include "../ast/Function.h"
+#include "../ast/IfBlock.h"
+#include "../ast/Parameter.h"
 
-#include <stack>
-#include <map>
+#include <vector>
 #include <memory>
 
 class Parser {
@@ -15,39 +17,40 @@ class Parser {
     private:
         std::shared_ptr<Scanner> scanner;
         Token nextToken;
-        // Program program;
+        std::shared_ptr<Program> program;
+        std::shared_ptr<Scope> currentScope;
 
         // Program.cpp
         void parseProgram();
 
         // Function.cpp
-        void parseFunctionDeclaration();
-        void parseFunctionCall();
-        void parseFunctionBodyBlock();
-        void parseParameterDeclaration();
-        void parseParameterCall();
-        void parseArgList();
-        void parseValueList();
+        std::shared_ptr<Function> parseFunctionDeclaration();
+        std::shared_ptr<FunctionCall> parseFunctionCall();
+        InstructionBlock parseFunctionBodyBlock();
+        std::vector<Parameter> parseParameterDeclaration();
+        std::vector<std::shared_ptr<Expression>> parseParameterCall();
+        std::vector<Parameter> parseArgList();
+        std::vector<std::shared_ptr<Expression>> parseValueList();
 
         // Instruction.cpp
-        void parseInstructionBlock();
-        void parseValueBlock();
+        InstructionBlock parseInstructionBlock();
+        std::shared_ptr<Expression> parseValueBlock();
 
         // ValueExpression.cpp
-        void parseValueExpression();
-        void parseLogicalExpression();
-        void parseConjunction();
-        void parseNegation();
-        void parseComparison();
-        void parseLogicalOperand();
-        void parseNumericExpression();
-        void parseMultiplication();
-        void parsePowerRaising();
-        void parseNumericOperand();
+        std::shared_ptr<LogicalExpression> parseValueExpression();
+        std::shared_ptr<Disjunction> parseLogicalExpression();
+        std::shared_ptr<Conjunction> parseConjunction();
+        std::shared_ptr<Negation> parseNegation();
+        std::shared_ptr<Comparison> parseComparison();
+        std::shared_ptr<Expression> parseLogicalOperand();
+        std::shared_ptr<Addition> parseNumericExpression();
+        std::shared_ptr<Multiplication> parseMultiplication();
+        std::shared_ptr<PowerRaising> parsePowerRaising();
+        std::shared_ptr<Expression> parseNumericOperand();
         
         // IfBlock.cpp
-        void parseIfBlock();
-        void parseIfClause();
-        void parseElifClauses();
-        void parseElseClause();
+        std::shared_ptr<IfBlock> parseIfBlock();
+        ConditionalClause parseIfClause();
+        ConditionalClause parseElifClauses();
+        ConditionalClause parseElseClause();
 };
