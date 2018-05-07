@@ -12,12 +12,9 @@ InstructionBlock Parser::parseFunctionBodyBlock() {
             nextToken = scanner->getNextToken();
             break;
         case IF:
-        case STRING_VALUE:
         case NOT:
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             instructions.returnExpression = parseValueBlock();
             break;
@@ -28,13 +25,10 @@ InstructionBlock Parser::parseFunctionBodyBlock() {
 }
 
 std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
-    std::shared_ptr<Function> function = std::make_shared<Function>();
+    auto function = std::make_shared<Function>();
     std::vector<Parameter> paramList;
     switch(nextToken) {
         case INT_TYPE:
-        case REAL_TYPE:
-        case BOOL_TYPE:
-        case STRING_TYPE:
             function->returnType = nextToken;
             nextToken = scanner->getNextToken();
 
@@ -76,9 +70,10 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
     Function function;
     switch(nextToken) {
         case IDENTIFIER:
-            function = currentScope->functions[nextToken.getString()];
+            funcCall->functionName = nextToken.getString();
+            function = currentScope->functions[funcCall->functionName];
             nextToken = scanner->getNextToken();
-            
+
             if(nextToken == BRACE_OPEN) {
                 parameterValues = parseParameterCall();
             }
@@ -94,71 +89,63 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return funcCall;
 }
 
 std::vector<std::shared_ptr<Expression>> Parser::parseParameterCall() {
+    std::vector<std::shared_ptr<Expression>> values;
     switch(nextToken) {
         case BRACE_OPEN:
             nextToken = scanner->getNextToken();
-            parseValueList();
+            values = parseValueList();
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return values;
 }
 
 std::vector<std::shared_ptr<Expression>> Parser::parseValueList() {
+    std::vector<std::shared_ptr<Expression>> values;
     switch(nextToken) {
         case BRACE_CLOSE:
-            break;
-        case STRING_VALUE:       
+            break;    
         case NOT:
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
-            parseValueExpression();
+            values.push_back(parseValueExpression());
             while(nextToken == COMMA) {
                 nextToken = scanner->getNextToken();
-                parseValueExpression();
+                values.push_back(parseValueExpression());
             }
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return values;
 }
 
-void Parser::parseArgList() {
+std::vector<Parameter> Parser::parseArgList() {
+    std::vector<Parameter> parameters;
+    Parameter parameter;
     switch(nextToken) {
         case INT_TYPE:
-        case REAL_TYPE:
-        case BOOL_TYPE:
-        case STRING_TYPE:
-            nextToken = scanner->getNextToken();
-            if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
-            nextToken = scanner->getNextToken();
-            while(nextToken == COMMA) {
-                nextToken = scanner->getNextToken();
-                switch(nextToken) {
-                    case INT_TYPE:
-                    case REAL_TYPE:
-                    case BOOL_TYPE:
-                    case STRING_TYPE:
-                        break;
-                    default:
-                        throw std::runtime_error("Unexpected token");
-                }
+            do {
+                parameter.type = nextToken;
                 nextToken = scanner->getNextToken();
                 if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
+                parameter.name = nextToken.getString();
                 nextToken = scanner->getNextToken();
-            }
+                parameters.push_back(parameter);
+            } while(nextToken == COMMA);
             break;
         case BRACE_CLOSE:
             break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return parameters;
 }

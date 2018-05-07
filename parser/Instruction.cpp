@@ -26,7 +26,7 @@ InstructionBlock Parser::parseInstructionBlock() {
                     case BOOL_TYPE:
                     case STRING_TYPE:
                         auto function = parseFunctionDeclaration();
-                        currentScope->functions.push_back(function);
+                        currentScope->functions[function->identifier] = function;
                 }
             }
             if(nextToken != RETURN) throw std::runtime_error("Unexpected token");
@@ -53,8 +53,9 @@ std::shared_ptr<Expression> Parser::parseValueBlock() {
         case REAL_VALUE:
         case IDENTIFIER:
             expression = parseValueExpression();
-            return expression;
+            break;
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return expression;
 }

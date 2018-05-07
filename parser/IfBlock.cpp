@@ -3,7 +3,7 @@
 using namespace TokenType;
 
 std::shared_ptr<IfBlock> Parser::parseIfBlock() {
-    std::shared_ptr<IfBlock> ifBlock;
+    auto ifBlock = std::make_shared<IfBlock>();
     switch(nextToken) {
         case IF:       
             ifBlock->ifClause = parseIfClause();

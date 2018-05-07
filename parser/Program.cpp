@@ -15,7 +15,7 @@ void Parser::parseProgram() {
             case BOOL_TYPE:
             case STRING_TYPE:
                 function = parseFunctionDeclaration();
-                currentScope->functions.push_back(parseFunctionDeclaration());
+                currentScope->functions[function->identifier] = function;
                 break;
             default:
                 throw std::runtime_error("Unexpected token");

@@ -106,6 +106,7 @@ std::shared_ptr<Comparison> Parser::parseComparison() {
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return comparison;
 }
 
 std::shared_ptr<Expression> Parser::parseLogicalOperand() {
@@ -176,6 +177,7 @@ std::shared_ptr<Multiplication> Parser::parseMultiplication() {
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return multiplication;
 }
 
 std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
@@ -194,6 +196,7 @@ std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
         default:
             throw std::runtime_error("Unexpected token");
     }
+    return power;
 }
 
 std::shared_ptr<Expression> Parser::parseNumericOperand() {
