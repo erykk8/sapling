@@ -9,3 +9,7 @@ target_sources(Parser
     PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/Parser.h"
 )
+
+target_link_libraries(Parser PUBLIC Token)
+target_link_libraries(Parser PUBLIC AST)
+target_link_libraries(Parser PUBLIC Scanner)

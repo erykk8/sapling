@@ -7,7 +7,6 @@ std::shared_ptr<LogicalExpression> Parser::parseValueExpression() {
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
         case IDENTIFIER:
             expression->a = *parseLogicalExpression();
@@ -22,9 +21,7 @@ std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             expression->a = *parseConjunction();
             if(nextToken == OR) {
@@ -42,9 +39,7 @@ std::shared_ptr<Conjunction> Parser::parseConjunction() {
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             conjunction->a = *parseNegation();
             if(nextToken == AND) {
@@ -66,9 +61,7 @@ std::shared_ptr<Negation> Parser::parseNegation() {
             negation->a = *parseComparison();
             break;
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             negation->isActuallyNegation = false;
             negation->a = *parseComparison();
@@ -83,9 +76,7 @@ std::shared_ptr<Comparison> Parser::parseComparison() {
     auto comparison = std::make_shared<Comparison>();
     switch(nextToken) {
         case BRACE_OPEN:
-        case BOOL_VALUE:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             comparison->a = parseLogicalOperand();
             switch(nextToken) {
@@ -113,13 +104,8 @@ std::shared_ptr<Expression> Parser::parseLogicalOperand() {
     auto numericExpression = std::make_shared<NumericExpression>();
     auto value = std::make_shared<IntValue>();
     switch(nextToken) {
-        case BOOL_VALUE:
-            value->value = nextToken;
-            nextToken = scanner->getNextToken();
-            return value;
         case BRACE_OPEN:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             numericExpression->a = *parseNumericExpression();
             return numericExpression;
@@ -133,7 +119,6 @@ std::shared_ptr<Addition> Parser::parseNumericExpression() {
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             expression->a = *parseMultiplication();
             if(nextToken == ADD) {
@@ -158,18 +143,15 @@ std::shared_ptr<Multiplication> Parser::parseMultiplication() {
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             multiplication->a = *parsePowerRaising();
             if(nextToken == MULTIPLY) {
+                multiplication->isDivision = false;
                 nextToken = scanner->getNextToken();
                 multiplication->b = parseMultiplication();
             }
             else if(nextToken == DIVIDE) {
-                nextToken = scanner->getNextToken();
-                multiplication->b = parseMultiplication();
-            }
-            else if(nextToken == INT_DIVIDE) {
+                multiplication->isDivision = true;
                 nextToken = scanner->getNextToken();
                 multiplication->b = parseMultiplication();
             }
@@ -185,7 +167,6 @@ std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
-        case REAL_VALUE:
         case IDENTIFIER:
             power->base = parseNumericOperand();
             if(nextToken == POWER) {

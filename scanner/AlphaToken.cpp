@@ -23,41 +23,25 @@ bool Scanner::alphaToken() {
     }
     else if(buf.str() == "and") {
         currentToken = TokenType::AND;
-        currentToken.setOtherValue(buf.str());
+        currentToken.setString(buf.str());
     }
     else if(buf.str() == "or") {
         currentToken = TokenType::OR;
-        currentToken.setOtherValue(buf.str());
+        currentToken.setString(buf.str());
     }
     else if(buf.str() == "not") {
         currentToken = TokenType::NOT;
-        currentToken.setOtherValue(buf.str());
+        currentToken.setString(buf.str());
     }
     else if(buf.str() == "True") {
-        currentToken.setBool(true);
+        currentToken.setInt(1);
     }
     else if(buf.str() == "False") {
-        currentToken.setBool(false);
+        currentToken.setInt(0);
     }
     else if(buf.str() == "Int") {
         currentToken = TokenType::INT_TYPE;
-        currentToken.setOtherValue(buf.str());
-    }
-    else if(buf.str() == "Bool") {
-        currentToken = TokenType::BOOL_TYPE;
-        currentToken.setOtherValue(buf.str());
-    }
-    else if(buf.str() == "String") {
-        currentToken = TokenType::STRING_TYPE;
-        currentToken.setOtherValue(buf.str());
-    }
-    else if(buf.str() == "Real") {
-        currentToken = TokenType::REAL_TYPE;
-        currentToken.setOtherValue(buf.str());
-    }
-    else if(buf.str() == "Void") {
-        currentToken = TokenType::VOID_TYPE;
-        currentToken.setOtherValue(buf.str());
+        currentToken.setString(buf.str());
     }
     else if(buf.str().length() > 0) {
         currentToken = TokenType::IDENTIFIER;

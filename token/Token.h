@@ -5,17 +5,16 @@
 namespace TokenType {
     enum Type   {
                     IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
-                        INT_TYPE, BOOL_TYPE, REAL_TYPE, STRING_TYPE, VOID_TYPE,
+                        INT_TYPE,
                         NOT, AND, OR,
-                        INT_VALUE, BOOL_VALUE, REAL_VALUE, STRING_VALUE,
+                        INT_VALUE,
                         IDENTIFIER,
                         ASSIGNMENT_OPERATOR,
                         LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL,
                         EQUAL, NOT_EQUAL,
-                        POWER, MULTIPLY, INT_DIVIDE, DIVIDE, ADD, SUBTRACT,
+                        POWER, MULTIPLY, DIVIDE, ADD, SUBTRACT,
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
-                        SQUARE_BRACE_OPEN, SQUARE_BRACE_CLOSE,
                         EOT,
                 };
 }
@@ -30,18 +29,12 @@ class Token {
 
         TokenType::Type getType() const;
         int getInt() const;
-        bool getBool() const;
-        double getReal() const;
         std::string getString() const;
 
         std::string getName() const;
 
         void setInt(int value);
-        void setBool(bool value);
-        void setReal(double value);
         void setString(std::string value);
-
-        void setOtherValue(std::string value);
 
         void setLine(int line);
         void setPosition(int position);
@@ -57,11 +50,7 @@ class Token {
         int line;
         int position;
         TokenType::Type type;
-        union {
-            int integer;
-            bool boolean;
-            double real;
-        };
+        int integer;
         std::string string; // lazy
 
         static std::vector<std::string> names;

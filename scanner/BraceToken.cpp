@@ -14,12 +14,6 @@ bool Scanner::braceToken() {
         case ')':
             currentToken = TokenType::BRACE_CLOSE;
             break;
-        case '[':
-            currentToken = TokenType::SQUARE_BRACE_OPEN;
-            break;
-        case ']':
-            currentToken = TokenType::SQUARE_BRACE_CLOSE;
-            break;
         default:
             return false;
     }

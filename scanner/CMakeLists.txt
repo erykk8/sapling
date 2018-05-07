@@ -12,3 +12,5 @@ target_sources(Scanner
         "${CMAKE_CURRENT_LIST_DIR}/IO.h"
         "${CMAKE_CURRENT_LIST_DIR}/Scanner.h"
 )
+
+target_link_libraries(Scanner PUBLIC Token)

@@ -5,9 +5,10 @@ Parser::Parser(std::shared_ptr<Scanner> s) : scanner(s) {
     program = std::make_shared<Program>();
 }
 
-void Parser::parse() {
+int Parser::parse() {
     try {
         parseProgram();
+        return program->evaluate();
     }
     catch (std::runtime_error e) {
         std::cout << e.what() << ": " << nextToken.getName() << " at line " << nextToken.getLine();

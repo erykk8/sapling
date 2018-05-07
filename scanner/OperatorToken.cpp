@@ -47,14 +47,10 @@ bool Scanner::operatorToken() {
         case '/':
             currentToken = TokenType::DIVIDE;
             buf << (char)reader->nextChar();
-            if(reader->peekChar() == '/') {
-                currentToken = TokenType::INT_DIVIDE;
-                buf << (char)reader->nextChar();
-            }
             break;
         default:
             return false;
     }
-    currentToken.setOtherValue(buf.str());
+    currentToken.setString(buf.str());
     return true;
 }

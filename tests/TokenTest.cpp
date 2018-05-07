@@ -23,42 +23,10 @@ BOOST_AUTO_TEST_CASE(get_type_after_set_int_returns_int_value) {
     BOOST_CHECK_EQUAL(t.getType(), TokenType::INT_VALUE);
 }
 
-BOOST_AUTO_TEST_CASE(get_type_after_set_bool_returns_bool_value) {
-    Token t;
-    t.setBool(true);
-    BOOST_CHECK_EQUAL(t.getType(), TokenType::BOOL_VALUE);
-}
-
-BOOST_AUTO_TEST_CASE(get_type_after_set_real_returns_real_value) {
-    Token t;
-    t.setReal(4.13);
-    BOOST_CHECK_EQUAL(t.getType(), TokenType::REAL_VALUE);
-}
-
-BOOST_AUTO_TEST_CASE(get_type_after_set_string_returns_string_value) {
-    Token t;
-    t.setString("string");
-    BOOST_CHECK_EQUAL(t.getType(), TokenType::STRING_VALUE);
-}
-
 BOOST_AUTO_TEST_CASE(get_int_after_set_int_returns_integer) {
     Token t;
     t.setInt(413);
     BOOST_CHECK_EQUAL(t.getInt(), 413);
-}
-
-BOOST_AUTO_TEST_CASE(get_bool_after_set_bool_returns_boolean) {
-    Token t1, t2;
-    t1.setBool(true);
-    t2.setBool(false);
-    BOOST_CHECK_EQUAL(t1.getBool(), true);
-    BOOST_CHECK_EQUAL(t2.getBool(), false);
-}
-
-BOOST_AUTO_TEST_CASE(get_real_after_set_real_returns_real) {
-    Token t;
-    t.setReal(4.13);
-    BOOST_CHECK_EQUAL(t.getReal(), 4.13);
 }
 
 BOOST_AUTO_TEST_CASE(get_string_after_set_string_returns_string) {

@@ -11,7 +11,7 @@
 
 class Parser {
     public:
-        void parse();
+        int parse();
         Parser(std::shared_ptr<Scanner> s);
         ~Parser() = default;
     private:

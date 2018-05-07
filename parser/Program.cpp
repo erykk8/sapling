@@ -11,9 +11,6 @@ void Parser::parseProgram() {
             case EOT:
                 return;
             case INT_TYPE:
-            case REAL_TYPE:
-            case BOOL_TYPE:
-            case STRING_TYPE:
                 function = parseFunctionDeclaration();
                 currentScope->functions[function->identifier] = function;
                 break;

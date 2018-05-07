@@ -27,11 +27,6 @@ BOOST_AUTO_TEST_CASE(int_variable_is_parsed) {
     BOOST_CHECK_NO_THROW(p.parse());
 }
 
-BOOST_AUTO_TEST_CASE(string_variable_is_parsed) {
-    Parser p = makeParserFromString("String hello = \"Hello world!\"");
-    BOOST_CHECK_NO_THROW(p.parse());
-}
-
 BOOST_AUTO_TEST_CASE(int_function_with_no_args_is_parsed) {
     Parser p = makeParserFromString("Int x() = 5");
     BOOST_CHECK_NO_THROW(p.parse());
@@ -43,7 +38,7 @@ BOOST_AUTO_TEST_CASE(int_function_with_one_arg_is_parsed) {
 }
 
 BOOST_AUTO_TEST_CASE(many_one_line_functions_are_parsed) {
-    Parser p = makeParserFromString("Int x = 5\nReal y = 0.5");
+    Parser p = makeParserFromString("Int x = 5\nInt y = 10");
     BOOST_CHECK_NO_THROW(p.parse());
 }
 
@@ -67,9 +62,9 @@ BOOST_AUTO_TEST_CASE(many_complex_functions_are_parsed) {
                                     "\tInt y = 2^3 * 1/2\n"
                                     "\treturn if(y < 128) 2 else 314\n"
                                     "}"
-                                    "Bool z = {\n"
-                                    "return if (x == 2) True\n"
-                                    "else False\n"
+                                    "Int z = {\n"
+                                    "return if (x == 2) 1\n"
+                                    "else 0\n"
                                     "}");
     BOOST_CHECK_NO_THROW(p.parse());
 }
@@ -80,7 +75,7 @@ BOOST_AUTO_TEST_CASE(numeric_expression_is_parsed) {
 }
 
 BOOST_AUTO_TEST_CASE(logical_expression_is_parsed) {
-    Parser p = makeParserFromString("Bool x = (50*2 <= 100) and 2 + 2 == 4 or False");
+    Parser p = makeParserFromString("Int x = (50*2 <= 100) and 2 + 2 == 4 or False");
     BOOST_CHECK_NO_THROW(p.parse());
 }
 

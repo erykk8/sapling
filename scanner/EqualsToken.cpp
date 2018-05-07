@@ -22,7 +22,7 @@ bool Scanner::equalsCharacterToken() {
                 currentToken = TokenType::ASSIGNMENT_OPERATOR;
                 break;
         }
-        currentToken.setOtherValue(buf.str());
+        currentToken.setString(buf.str());
         return true;
     }
     return false;

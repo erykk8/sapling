@@ -10,7 +10,7 @@ foreach(testSrc ${TEST_SRCS})
 
         add_executable(${testName} ${testSrc})
 
-        target_link_libraries(${testName} ${Boost_LIBRARIES} Parser Token Scanner)
+        target_link_libraries(${testName} ${Boost_LIBRARIES} AST Parser Token Scanner)
 
         set_target_properties(${testName} PROPERTIES 
             RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/tests/bin)

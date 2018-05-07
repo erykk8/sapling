@@ -13,43 +13,17 @@ bool Scanner::valueToken() {
 
             if(buf.str() == "-") {
                 currentToken = TokenType::SUBTRACT;
-                currentToken.setOtherValue(buf.str());
-            }
-            else if(reader->peekChar() == '.') {
-                buf << (char)reader->nextChar();
-                while(digit(reader->peekChar())) {
-                    buf << (char)reader->nextChar();
-                }
-                currentToken.setReal(std::stod(buf.str()));
+                currentToken.setString(buf.str());
             }
             else {
                 currentToken.setInt(std::stoi(buf.str()));
             }
             break;
-        case '"':
-            reader->nextChar();
-            while(stringable(reader->peekChar())) {
-                buf << (char)reader->nextChar();
-            }
-            if(reader->peekChar() == '"') {
-                reader->nextChar();
-                currentToken.setString(buf.str());
-            }
-            else
-                throwInvalidString();
-            break;
         default:
             while(digit(reader->peekChar())) {
                 buf << (char)reader->nextChar();
             }
-            if(reader->peekChar() == '.') {
-                buf << (char)reader->nextChar();
-                while(digit(reader->peekChar())) {
-                    buf << (char)reader->nextChar();
-                }
-                currentToken.setReal(std::stod(buf.str()));
-            }
-            else if(buf.str() != "" && buf.str() != ".") {
+            if(buf.str() != "") {
                 currentToken.setInt(std::stoi(buf.str()));
             }
             else return false;

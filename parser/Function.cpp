@@ -67,7 +67,7 @@ std::vector<Parameter> Parser::parseParameterDeclaration() {
 std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
     auto funcCall = std::make_shared<FunctionCall>();
     std::vector<std::shared_ptr<Expression>> parameterValues;
-    Function function;
+    std::shared_ptr<Function> function;
     switch(nextToken) {
         case IDENTIFIER:
             funcCall->functionName = nextToken.getString();
@@ -77,12 +77,12 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
             if(nextToken == BRACE_OPEN) {
                 parameterValues = parseParameterCall();
             }
-            if(function.parameters.size() != parameterValues.size()) {
+            if(function->parameters.size() != parameterValues.size()) {
                 throw std::runtime_error("Not enough arguments given to function");
             }
 
             for(int i = 0; i < parameterValues.size(); ++i) {
-                funcCall->parameterScope->identifiers[function.parameters[i].name] = parameterValues[i];
+                funcCall->parameterScope->identifiers[function->parameters[i].name] = parameterValues[i];
             }
             
             break;
