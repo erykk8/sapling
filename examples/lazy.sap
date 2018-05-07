@@ -1,0 +1,3 @@
+Int function(Int a, Int b) = a
+
+Int main = if(1 == 1) function(0, 1/0) else 1/0
