@@ -11,10 +11,10 @@ BOOST_AUTO_TEST_CASE(get_type_after_default_constructor_returns_eot) {
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_type_constructor_returns_given_type) {
-    Token t1(TokenType::CURLY_BRACE_OPEN), t2(TokenType::LESS_THAN), t3(TokenType::INT_TYPE);
+    Token t1(TokenType::CURLY_BRACE_OPEN), t2(TokenType::LESS_THAN), t3(TokenType::LET);
     BOOST_CHECK_EQUAL(t1.getType(), TokenType::CURLY_BRACE_OPEN);
     BOOST_CHECK_EQUAL(t2.getType(), TokenType::LESS_THAN);
-    BOOST_CHECK_EQUAL(t3.getType(), TokenType::INT_TYPE);
+    BOOST_CHECK_EQUAL(t3.getType(), TokenType::LET);
 }
 
 BOOST_AUTO_TEST_CASE(get_type_after_set_int_returns_int_value) {

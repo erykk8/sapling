@@ -56,7 +56,7 @@ void Token::setPosition(int position) {
 
 std::vector<std::string> Token::names = {
     "IF", "ELIF", "ELSE", "RETURN", "RETURN_ARROW",
-    "COMMA", "INT_TYPE",
+    "COMMA", "LET",
     "NOT", "AND", "OR", "INT_VALUE",
     "IDENTIFIER", "ASSIGNMENT_OPERATOR", "LESS_THAN", "GREATER_THAN",
     "LESS_EQUAL", "GREATER_EQUAL", "EQUAL", "NOT_EQUAL", "POWER", "MULTIPLY",

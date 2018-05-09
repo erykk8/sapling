@@ -41,8 +41,8 @@ bool Scanner::alphaToken() {
     else if(buf.str() == "False") {
         currentToken.setInt(0);
     }
-    else if(buf.str() == "Int") {
-        currentToken = TokenType::INT_TYPE;
+    else if(buf.str() == "let") {
+        currentToken = TokenType::LET;
         currentToken.setString(buf.str());
     }
     else if(buf.str().length() > 0) {

@@ -5,7 +5,7 @@
 namespace TokenType {
     enum Type   {
                     IF, ELIF, ELSE, RETURN, RETURN_ARROW, COMMA,
-                        INT_TYPE,
+                        LET,
                         NOT, AND, OR,
                         INT_VALUE,
                         IDENTIFIER,

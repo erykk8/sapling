@@ -49,9 +49,9 @@ BOOST_AUTO_TEST_CASE(else_keyword) {
     BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::ELSE);
 }
 
-BOOST_AUTO_TEST_CASE(int_type) {
-    Scanner s = makeScannerFromString("Int");
-    BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::INT_TYPE);
+BOOST_AUTO_TEST_CASE(let) {
+    Scanner s = makeScannerFromString("let");
+    BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::LET);
 }
 
 BOOST_AUTO_TEST_CASE(return_arrow) {
@@ -204,8 +204,8 @@ BOOST_AUTO_TEST_CASE(comma) {
 }
 
 BOOST_AUTO_TEST_CASE(skip_comments) {
-    Scanner s = makeScannerFromString("Int x\n# a comment\n# another comment");
-    BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::INT_TYPE);
+    Scanner s = makeScannerFromString("let x\n# a comment\n# another comment");
+    BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::LET);
     BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::IDENTIFIER);
     BOOST_CHECK_EQUAL(s.getNextToken(), TokenType::EOT);
 }

@@ -28,8 +28,7 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
     auto function = std::make_shared<Function>();
     std::vector<Parameter> paramList;
     switch(nextToken) {
-        case INT_TYPE:
-            function->returnType = nextToken;
+        case LET:
             nextToken = scanner->getNextToken();
 
             if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
@@ -147,16 +146,11 @@ std::vector<Parameter> Parser::parseArgList() {
     std::vector<Parameter> parameters;
     Parameter parameter;
     switch(nextToken) {
-        case INT_TYPE:
-             parameter.type = nextToken;
-            nextToken = scanner->getNextToken();
-            if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
+        case IDENTIFIER:
             parameter.name = nextToken.getString();
             nextToken = scanner->getNextToken();
             parameters.push_back(parameter);
             while(nextToken == COMMA) {
-                nextToken = scanner->getNextToken();
-                parameter.type = nextToken;
                 nextToken = scanner->getNextToken();
                 if(nextToken != IDENTIFIER) throw std::runtime_error("Unexpected token");
                 parameter.name = nextToken.getString();

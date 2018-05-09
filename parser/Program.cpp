@@ -9,7 +9,7 @@ void Parser::parseProgram() {
         switch(nextToken) {
             case EOT:
                 return;
-            case INT_TYPE:
+            case LET:
                 parseFunctionDeclaration();
                 break;
             default:
