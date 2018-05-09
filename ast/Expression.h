@@ -26,7 +26,7 @@ struct PowerRaising : public Expression {
 struct Multiplication : public Expression {
     PowerRaising a;
     std::shared_ptr<Multiplication> b;
-    bool isDivision;
+    TokenType::Type type;
 
     Multiplication(int a = 1);
     ~Multiplication() {}

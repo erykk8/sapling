@@ -48,6 +48,10 @@ bool Scanner::operatorToken() {
             currentToken = TokenType::DIVIDE;
             buf << (char)reader->nextChar();
             break;
+        case '%':
+            currentToken = TokenType::MODULO;
+            buf << (char)reader->nextChar();
+            break;
         default:
             return false;
     }

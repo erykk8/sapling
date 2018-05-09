@@ -148,15 +148,16 @@ std::shared_ptr<Multiplication> Parser::parseMultiplication() {
         case INT_VALUE:
         case IDENTIFIER:
             multiplication->a = *parsePowerRaising();
-            if(nextToken == MULTIPLY) {
-                multiplication->isDivision = false;
-                nextToken = scanner->getNextToken();
-                multiplication->b = parseMultiplication();
-            }
-            else if(nextToken == DIVIDE) {
-                multiplication->isDivision = true;
-                nextToken = scanner->getNextToken();
-                multiplication->b = parseMultiplication();
+            switch(nextToken) {
+                case MULTIPLY:
+                case DIVIDE:
+                case MODULO:
+                    multiplication->type = nextToken;
+                    nextToken = scanner->getNextToken();
+                    multiplication->b = parseMultiplication();
+                    break;
+                default:
+                    break;
             }
             break;
         default:

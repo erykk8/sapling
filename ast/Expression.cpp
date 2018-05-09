@@ -23,11 +23,17 @@ PowerRaising::PowerRaising(int base) : power(nullptr) {
 
 int Multiplication::evaluate(std::shared_ptr<Scope> scope) {
     if(!b) return a.evaluate(scope);
-    if(isDivision) return a.evaluate(scope) / b->evaluate(scope);
-    else return a.evaluate(scope) * b->evaluate(scope);
+    switch(type) {
+        case MULTIPLY:
+            return a.evaluate(scope) * b->evaluate(scope);
+        case DIVIDE:
+            return a.evaluate(scope) / b->evaluate(scope);
+        case MODULO:
+            return a.evaluate(scope) % b->evaluate(scope);
+    }
 }
 
-Multiplication::Multiplication(int a) : a(a), b(nullptr), isDivision(false) {
+Multiplication::Multiplication(int a) : a(a), b(nullptr), type(TokenType::MULTIPLY) {
 }
 
 int Addition::evaluate(std::shared_ptr<Scope> scope) {

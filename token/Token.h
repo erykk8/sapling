@@ -12,7 +12,7 @@ namespace TokenType {
                         ASSIGNMENT_OPERATOR,
                         LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL,
                         EQUAL, NOT_EQUAL,
-                        POWER, MULTIPLY, DIVIDE, ADD, SUBTRACT,
+                        POWER, MULTIPLY, DIVIDE, MODULO, ADD, SUBTRACT,
                         CURLY_BRACE_OPEN, CURLY_BRACE_CLOSE,
                         BRACE_OPEN, BRACE_CLOSE,
                         EOT,

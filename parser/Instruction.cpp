@@ -13,14 +13,11 @@ InstructionBlock Parser::parseInstructionBlock() {
             instructions.returnExpression = parseValueBlock();
             break;
         case LET:
-            while(nextToken != RETURN) {
-                if(nextToken == LET) {
-                    auto function = parseFunctionDeclaration();
-                    program->scope->functions[function->identifier] = function;
-                }
-                else throw std::runtime_error("Unexpected token");
+            while(nextToken == LET) {
+                auto function = parseFunctionDeclaration();
+                program->scope->functions[function->identifier] = function;
             }
-            if(nextToken != RETURN) throw std::runtime_error("Unexpected token");
+            if(nextToken != RETURN) instructions.returnExpression = parseValueBlock();
         case RETURN:
             nextToken = scanner->getNextToken();
             instructions.returnExpression = parseValueBlock();

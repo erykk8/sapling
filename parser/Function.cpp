@@ -87,7 +87,7 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
                 // its an actual function, find it and its parameters
                 it = program->scope->functions.find(funcCall->functionName);
                 if(it == program->scope->functions.end()) {
-                    throw std::runtime_error("Call to previously undefined function");
+                    throw std::runtime_error("Call to previously undefined function " + funcCall->functionName);
                 }
                 function = it->second;
 
