@@ -12,6 +12,5 @@ int Program::evaluate() {
     if(it == scope->functions.end()) {
         throw std::runtime_error("Undefined reference to main");
     }
-    it->second->body.scope = scope;
-    return it->second->body.evaluate();
+    return it->second->body.evaluate(scope);
 }

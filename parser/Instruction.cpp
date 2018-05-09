@@ -16,7 +16,7 @@ InstructionBlock Parser::parseInstructionBlock() {
             while(nextToken != RETURN) {
                 if(nextToken == INT_TYPE) {
                     auto function = parseFunctionDeclaration();
-                    currentScope->functions[function->identifier] = function;
+                    program->scope->functions[function->identifier] = function;
                 }
             }
             if(nextToken != RETURN) throw std::runtime_error("Unexpected token");

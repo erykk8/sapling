@@ -3,7 +3,6 @@
 
 Parser::Parser(std::shared_ptr<Scanner> s) : scanner(s) {
     program = std::make_shared<Program>();
-    currentScope = program->scope;
 }
 
 void Parser::parse() {

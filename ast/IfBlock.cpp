@@ -1,21 +1,16 @@
 #include "IfBlock.h"
 #include "Function.h"
 
-int IfBlock::evaluate() {
-    ifClause.condition.scope = scope;
-    if(ifClause.condition.evaluate()) {
-        ifClause.body.scope = scope;
-        return ifClause.body.evaluate();
+int IfBlock::evaluate(std::shared_ptr<Scope> scope) {
+    if(ifClause.condition.evaluate(scope)) {
+        return ifClause.body.evaluate(scope);
     }
     else if(elifClauses.size() > 0) {
         for(auto elifClause : elifClauses) {
-            elifClause.condition.scope = scope;
-            if(elifClause.condition.evaluate()) {
-                elifClause.body.scope = scope;
-                return elifClause.body.evaluate();
+            if(elifClause.condition.evaluate(scope)) {
+                return elifClause.body.evaluate(scope);
             }
         }
     }
-    elseClause.body.scope = scope;
-    return elseClause.body.evaluate();
+    return elseClause.body.evaluate(scope);
 }

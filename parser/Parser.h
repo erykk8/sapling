@@ -19,7 +19,6 @@ class Parser {
         std::shared_ptr<Scanner> scanner;
         Token nextToken;
         std::shared_ptr<Program> program;
-        std::shared_ptr<Scope> currentScope;
 
         // Program.cpp
         void parseProgram();

@@ -11,7 +11,7 @@ struct ConditionalClause {
 };
 
 struct IfBlock : public Expression {
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 
     ConditionalClause ifClause;
     std::vector<ConditionalClause> elifClauses;

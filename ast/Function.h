@@ -18,7 +18,7 @@ struct Scope {
 
 struct InstructionBlock : public Expression {
     std::shared_ptr<Expression> returnExpression;
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Function {
@@ -32,5 +32,5 @@ struct FunctionCall : public Expression {
     std::string functionName;
     std::map<std::string, std::shared_ptr<Expression>> parameters;
 
-    int evaluate(); 
+    int evaluate(std::shared_ptr<Scope> scope); 
 };

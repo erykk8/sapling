@@ -6,16 +6,13 @@
 
 using namespace TokenType;
 
-int IntValue::evaluate() {
-    std::cout << "evaluating value " << value.getInt() << std::endl;
+int IntValue::evaluate(std::shared_ptr<Scope> scope) {
     return value.getInt();
 }
 
-int PowerRaising::evaluate() {
-    base->scope = scope;
-    if(!power) return base->evaluate();
-    power->scope = scope;
-    return pow(base->evaluate(), power->evaluate());
+int PowerRaising::evaluate(std::shared_ptr<Scope> scope) {
+    if(!power) return base->evaluate(scope);
+    return pow(base->evaluate(scope), power->evaluate(scope));
 }
 
 PowerRaising::PowerRaising(int base) : power(nullptr) {
@@ -24,65 +21,57 @@ PowerRaising::PowerRaising(int base) : power(nullptr) {
     this->base = std::shared_ptr<Expression>(baseValue);
 }
 
-int Multiplication::evaluate() {
-    a.scope = scope;
-    if(!b) return a.evaluate();
-    b->scope = scope;
-    if(isDivision) return a.evaluate() / b->evaluate();
-    else return a.evaluate() * b->evaluate();
+int Multiplication::evaluate(std::shared_ptr<Scope> scope) {
+    if(!b) return a.evaluate(scope);
+    if(isDivision) return a.evaluate(scope) / b->evaluate(scope);
+    else return a.evaluate(scope) * b->evaluate(scope);
 }
 
 Multiplication::Multiplication(int a) : a(a), b(nullptr), isDivision(false) {
 }
 
-int Addition::evaluate() {
-    a.scope = scope;
-    if(!b) return a.evaluate();
-    b->scope = scope;
-    if(isSubtraction) return a.evaluate() - b->evaluate();
-    else return a.evaluate() + b->evaluate();
+int Addition::evaluate(std::shared_ptr<Scope> scope) {
+    if(!b) return a.evaluate(scope);
+    if(isSubtraction) return a.evaluate(scope) - b->evaluate(scope);
+    else return a.evaluate(scope) + b->evaluate(scope);
 }
 
 Addition::Addition(int a) : a(a), b(nullptr), isSubtraction(false) {
 }
 
-int NumericExpression::evaluate() {
-    a.scope = scope;
-    return a.evaluate();
+int NumericExpression::evaluate(std::shared_ptr<Scope> scope) {
+    return a.evaluate(scope);
 }
 
-int Comparison::evaluate() {
-    a->scope = scope;
+int Comparison::evaluate(std::shared_ptr<Scope> scope) {
     if(!b) {
-        return a->evaluate();
+        return a->evaluate(scope);
     }
-    b->scope = scope;
     switch(op) {
         case LESS_THAN:
-            return a->evaluate() < b->evaluate();
+            return a->evaluate(scope) < b->evaluate(scope);
         case LESS_EQUAL:
-            return a->evaluate() <= b->evaluate();
+            return a->evaluate(scope) <= b->evaluate(scope);
         case GREATER_THAN:
-            return a->evaluate() > b->evaluate();
+            return a->evaluate(scope) > b->evaluate(scope);
         case GREATER_EQUAL:
-            return a->evaluate() >= b->evaluate();
+            return a->evaluate(scope) >= b->evaluate(scope);
         case EQUAL:
-            return a->evaluate() == b->evaluate();
+            return a->evaluate(scope) == b->evaluate(scope);
         case NOT_EQUAL:
-            return a->evaluate() != b->evaluate();
+            return a->evaluate(scope) != b->evaluate(scope);
     }
 }
 
 Comparison::Comparison() : b(nullptr) {
 }
 
-int Negation::evaluate() {
-    a.scope = scope;
+int Negation::evaluate(std::shared_ptr<Scope> scope) {
     if(!isActuallyNegation) {
-        return a.evaluate();
+        return a.evaluate(scope);
     }
     else {
-        return !(bool)a.evaluate();
+        return !(bool)a.evaluate(scope);
     }
 }
 
@@ -92,35 +81,29 @@ Negation::Negation() : isActuallyNegation(false) {
 Conjunction::Conjunction() : b(nullptr) {
 }
 
-int Conjunction::evaluate() {
-    a.scope = scope;
+int Conjunction::evaluate(std::shared_ptr<Scope> scope) {
     if(!b) {
-        return a.evaluate();
+        return a.evaluate(scope);
     }
     else {
-        b->scope = scope;
-        return (bool)a.evaluate() && (bool)b->evaluate();
+        return (bool)a.evaluate(scope) && (bool)b->evaluate(scope);
     }
 }
 
 Disjunction::Disjunction() : b(nullptr) {
 }
 
-int Disjunction::evaluate() {
-    a.scope = scope;
+int Disjunction::evaluate(std::shared_ptr<Scope> scope) {
     if(!b) {
-        return a.evaluate();
+        return a.evaluate(scope);
     }
     else {
-        b->scope = scope;
-        return (bool)a.evaluate() || (bool)b->evaluate();
+        return (bool)a.evaluate(scope) || (bool)b->evaluate(scope);
     }
 }
 
-int LogicalExpression::evaluate() {
-    a.scope = scope;
-    value = a.evaluate();
-    std::cout << " logical expression value = " << value << std::endl;
+int LogicalExpression::evaluate(std::shared_ptr<Scope> scope) {
+    value = a.evaluate(scope);
     return value;
 }
     

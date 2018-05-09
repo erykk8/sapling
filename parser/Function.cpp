@@ -41,7 +41,7 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
             }
             function->parameters = paramList;
 
-            currentScope->functions[function->identifier] = function;
+            program->scope->functions[function->identifier] = function;
 
             if(nextToken != ASSIGNMENT_OPERATOR) throw std::runtime_error("Unexpected token");
             
@@ -73,7 +73,7 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
     auto funcCall = std::make_shared<FunctionCall>();
     std::vector<std::shared_ptr<Expression>> parameterValues;
     std::shared_ptr<Function> function;
-    auto it = currentScope->functions.end();
+    auto it = program->scope->functions.end();
     switch(nextToken) {
         case IDENTIFIER:
             funcCall->functionName = nextToken.getString();
@@ -86,8 +86,8 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
 
             if(parameterValues.size() > 0) {
                 // its an actual function, find it and its parameters
-                it = currentScope->functions.find(funcCall->functionName);
-                if(it == currentScope->functions.end()) {
+                it = program->scope->functions.find(funcCall->functionName);
+                if(it == program->scope->functions.end()) {
                     throw std::runtime_error("Call to previously undefined function");
                 }
                 function = it->second;

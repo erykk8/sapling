@@ -5,13 +5,12 @@
 struct Scope;
 
 struct Expression {
-    virtual int evaluate() = 0;
-    std::shared_ptr<Scope> scope;
+    virtual int evaluate(std::shared_ptr<Scope> scope) = 0;
 };
 
 struct IntValue : public Expression {
     Token value;
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct PowerRaising : public Expression {
@@ -21,7 +20,7 @@ struct PowerRaising : public Expression {
     PowerRaising(int base = 1);
     ~PowerRaising() {}
 
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Multiplication : public Expression {
@@ -32,7 +31,7 @@ struct Multiplication : public Expression {
     Multiplication(int a = 1);
     ~Multiplication() {}
 
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Addition : public Expression {
@@ -43,12 +42,12 @@ struct Addition : public Expression {
     Addition(int a = 0);
     ~Addition() {}
 
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct NumericExpression : public Expression {
     Addition a;
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Comparison : public Expression {
@@ -59,7 +58,7 @@ struct Comparison : public Expression {
 
     Comparison();
     ~Comparison() {}
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Negation : public Expression {
@@ -68,7 +67,7 @@ struct Negation : public Expression {
 
     Negation();
     ~Negation() {}
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Conjunction : public Expression {
@@ -77,7 +76,7 @@ struct Conjunction : public Expression {
 
     Conjunction();
     ~Conjunction() {}
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 struct Disjunction : public Expression {
@@ -86,13 +85,13 @@ struct Disjunction : public Expression {
     
     Disjunction();
     ~Disjunction() {}
-    int evaluate();
+    int evaluate(std::shared_ptr<Scope> scope);
 };
 
 class LogicalExpression : public Expression {
     public:
         Disjunction a;
-        int evaluate();
+        int evaluate(std::shared_ptr<Scope> scope);
         bool wasEvaluated = false;
         int value;
 };
