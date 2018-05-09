@@ -1,0 +1,2 @@
+let sumRange(a, b) = if(b < a) 0 elif(b == a) a else a + sumRange(a + 1, b)
+let main = sumRange(1, 10)
