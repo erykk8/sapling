@@ -41,6 +41,8 @@ std::shared_ptr<Function> Parser::parseFunctionDeclaration() {
             }
             function->parameters = paramList;
 
+            currentScope->functions[function->identifier] = function;
+
             if(nextToken != ASSIGNMENT_OPERATOR) throw std::runtime_error("Unexpected token");
             
             nextToken = scanner->getNextToken();
@@ -95,7 +97,7 @@ std::shared_ptr<FunctionCall> Parser::parseFunctionCall() {
                 }
 
                 for(int i = 0; i < parameterValues.size(); ++i) {
-                funcCall->parameters[function->parameters[i].name] = parameterValues[i];
+                    funcCall->parameters[function->parameters[i].name] = parameterValues[i];
                 }
             }            
             break;

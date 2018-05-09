@@ -3,6 +3,7 @@
 
 Program::Program() {
     scope = std::make_shared<Scope>();
+    scope->enclosingScope = nullptr;
 }
 
 int Program::evaluate() {
@@ -11,5 +12,6 @@ int Program::evaluate() {
     if(it == scope->functions.end()) {
         throw std::runtime_error("Undefined reference to main");
     }
-    return it->second->body.evaluate(scope);
+    it->second->body.scope = scope;
+    return it->second->body.evaluate();
 }

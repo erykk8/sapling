@@ -5,25 +5,26 @@
 struct Scope;
 
 struct Expression {
-    virtual int evaluate(std::shared_ptr<Scope> scope) = 0;
+    virtual int evaluate() = 0;
+    std::shared_ptr<Scope> scope;
 };
 
-struct IntValue : Expression {
+struct IntValue : public Expression {
     Token value;
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct PowerRaising {
+struct PowerRaising : public Expression {
     std::shared_ptr<Expression> base;
     std::shared_ptr<PowerRaising> power;
 
     PowerRaising(int base = 1);
     ~PowerRaising() {}
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Multiplication {
+struct Multiplication : public Expression {
     PowerRaising a;
     std::shared_ptr<Multiplication> b;
     bool isDivision;
@@ -31,10 +32,10 @@ struct Multiplication {
     Multiplication(int a = 1);
     ~Multiplication() {}
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Addition {
+struct Addition : public Expression {
     Multiplication a;
     std::shared_ptr<Addition> b;
     bool isSubtraction;
@@ -42,15 +43,15 @@ struct Addition {
     Addition(int a = 0);
     ~Addition() {}
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct NumericExpression : Expression {
+struct NumericExpression : public Expression {
     Addition a;
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Comparison {
+struct Comparison : public Expression {
     std::shared_ptr<Expression> a;
     std::shared_ptr<Expression> b;
 
@@ -58,38 +59,40 @@ struct Comparison {
 
     Comparison();
     ~Comparison() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Negation {
+struct Negation : public Expression {
     Comparison a;
     bool isActuallyNegation;
 
     Negation();
     ~Negation() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Conjunction {
+struct Conjunction : public Expression {
     Negation a;
     std::shared_ptr<Conjunction> b;
 
     Conjunction();
     ~Conjunction() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
-struct Disjunction {
+struct Disjunction : public Expression {
     Conjunction a;
     std::shared_ptr<Disjunction> b;
     
     Disjunction();
     ~Disjunction() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
 class LogicalExpression : public Expression {
     public:
         Disjunction a;
-        int evaluate(std::shared_ptr<Scope> scope);
+        int evaluate();
+        bool wasEvaluated = false;
+        int value;
 };

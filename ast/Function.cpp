@@ -2,30 +2,35 @@
 #include <iostream>
 #include <memory>
 
-int InstructionBlock::evaluate(std::shared_ptr<Scope> scope) {
-    return returnExpression->evaluate(scope);
+int InstructionBlock::evaluate() {
+    returnExpression->scope = scope;
+    return returnExpression->evaluate();
 }
 
-int Function::evaluate(std::map<std::string, std::shared_ptr<Expression>> parameters, std::shared_ptr<Scope> evalScope) {
-    scope = std::make_shared<Scope>();
-    scope->functions = evalScope->functions;
-    scope->parameters = parameters;
+int FunctionCall::evaluate() {
+    auto newScope = std::make_shared<Scope>();
+    newScope->enclosingScope = scope;
+    newScope->functions = scope->functions;
+    newScope->parameters = parameters;
 
-    return body.evaluate(scope);
-}
+    std::cout << "evaluating " << functionName;
+    std::cout << " in scope " << scope.get();
+    std::cout << " within scope " << scope->enclosingScope.get() << std::endl;
 
-int FunctionCall::evaluate(std::shared_ptr<Scope> scope) {
+    // evaluate parameters in the enclosing scope
     auto it = scope->parameters.find(functionName);
     if(it != scope->parameters.end()) {
-        return it->second->evaluate(scope->enclosingScope);
+        std::cout << "evaluating as parameter in enclosing scope" << std::endl;
+        it->second->scope = scope->enclosingScope;
+        return it->second->evaluate();
     }
+    // evaluate function bodies in the new scope, with new parameter values sets
     auto it2 = scope->functions.find(functionName);
     if(it2 != scope->functions.end()) {
-        if(parameters.size() > 0) {
-            return it2->second->evaluate(parameters, scope);
-        }
-        else {
-            return it2->second->body.evaluate(scope);
-        }
+        InstructionBlock blockInstance = it2->second->body;
+        blockInstance.scope = newScope;
+        return blockInstance.evaluate();
     }
+
+    throw std::runtime_error("Undefined reference to " + functionName);
 }

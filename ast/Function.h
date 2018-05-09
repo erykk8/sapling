@@ -16,9 +16,9 @@ struct Scope {
         std::shared_ptr<Scope> enclosingScope;
 };
 
-struct InstructionBlock {
+struct InstructionBlock : public Expression {
     std::shared_ptr<Expression> returnExpression;
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate();
 };
 
 struct Function {
@@ -26,14 +26,11 @@ struct Function {
     std::string identifier;
     std::vector<Parameter> parameters;
     InstructionBlock body;
-    std::shared_ptr<Scope> scope;
-
-    int evaluate(std::map<std::string, std::shared_ptr<Expression>> parameters, std::shared_ptr<Scope> scope);
 };
 
-struct FunctionCall : Expression {
+struct FunctionCall : public Expression {
     std::string functionName;
     std::map<std::string, std::shared_ptr<Expression>> parameters;
 
-    int evaluate(std::shared_ptr<Scope> scope); 
+    int evaluate(); 
 };

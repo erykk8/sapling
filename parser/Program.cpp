@@ -11,8 +11,7 @@ void Parser::parseProgram() {
             case EOT:
                 return;
             case INT_TYPE:
-                function = parseFunctionDeclaration();
-                currentScope->functions[function->identifier] = function;
+                parseFunctionDeclaration();
                 break;
             default:
                 throw std::runtime_error("Unexpected token");

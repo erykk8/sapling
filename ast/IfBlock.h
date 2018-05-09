@@ -10,8 +10,8 @@ struct ConditionalClause {
     InstructionBlock body;
 };
 
-struct IfBlock : Expression {
-    int evaluate(std::shared_ptr<Scope> scope);
+struct IfBlock : public Expression {
+    int evaluate();
 
     ConditionalClause ifClause;
     std::vector<ConditionalClause> elifClauses;
