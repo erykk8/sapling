@@ -1,4 +1,4 @@
-Int abs(Int x) = if(x < 0) -1 * x else x
-Int safeDivide(Int x, Int y) = if(y == 0) 0 else x / y
+let abs(x) = if(x < 0) -1 * x else x
+let safeDivide(x, y) = if(y == 0) 0 else x / y
 
-Int main = safeDivide(5, 0) + safeDivide(5, 2) + abs(-20)
+let main = safeDivide(5, 0) + safeDivide(5, 2) + abs(-20)
