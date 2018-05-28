@@ -62,4 +62,9 @@ BOOST_AUTO_TEST_CASE(isPrime) {
     BOOST_CHECK_EQUAL(value, 0);
 }
 
+BOOST_AUTO_TEST_CASE(fibonacci) {
+    int value = runExample("fibonacci.sap");
+    BOOST_CHECK_EQUAL(value, 55);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
