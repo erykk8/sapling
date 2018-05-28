@@ -54,11 +54,6 @@ BOOST_AUTO_TEST_CASE(let) {
     BOOST_CHECK_EQUAL(s->getNextToken(), TokenType::LET);
 }
 
-BOOST_AUTO_TEST_CASE(return_arrow) {
-    auto s = makeScannerFromString("=>");
-    BOOST_CHECK_EQUAL(s->getNextToken(), TokenType::RETURN_ARROW);
-}
-
 BOOST_AUTO_TEST_CASE(return_keyword) {
     auto s = makeScannerFromString("return");
     BOOST_CHECK_EQUAL(s->getNextToken(), TokenType::RETURN);

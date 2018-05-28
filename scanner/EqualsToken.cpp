@@ -8,11 +8,6 @@ bool Scanner::equalsCharacterToken() {
         buf << (char)reader->nextChar();
         char c = reader->peekChar();
         switch(c) {
-            case '>':
-                reader->nextChar();
-                currentToken = TokenType::RETURN_ARROW;
-                buf << c;
-                break;
             case '=':
                 reader->nextChar();
                 currentToken = TokenType::EQUAL;
