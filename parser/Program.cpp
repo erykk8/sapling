@@ -3,7 +3,6 @@
 using namespace TokenType;
 
 void Parser::parseProgram() {
-    std::shared_ptr<Function> function;
     nextToken = scanner->getNextToken();
     while(true) {
         switch(nextToken) {

@@ -2,14 +2,14 @@
 
 using namespace TokenType;
 
-std::shared_ptr<LogicalExpression> Parser::parseValueExpression() {
-    auto expression = std::make_shared<LogicalExpression>();
+std::unique_ptr<LogicalExpression> Parser::parseValueExpression() {
+    auto expression = std::make_unique<LogicalExpression>();
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            expression->a = *parseLogicalExpression();
+            expression->a = parseLogicalExpression();
             break;
         default:
             throw std::runtime_error("Unexpected token");
@@ -17,14 +17,14 @@ std::shared_ptr<LogicalExpression> Parser::parseValueExpression() {
     return expression;
 }
 
-std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
-    auto expression = std::make_shared<Disjunction>();
+std::unique_ptr<Disjunction> Parser::parseLogicalExpression() {
+    auto expression = std::make_unique<Disjunction>();
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            expression->a = *parseConjunction();
+            expression->a = parseConjunction();
             if(nextToken == OR) {
                 nextToken = scanner->getNextToken();
                 expression->b = parseLogicalExpression();
@@ -36,14 +36,14 @@ std::shared_ptr<Disjunction> Parser::parseLogicalExpression() {
     return expression;
 }
 
-std::shared_ptr<Conjunction> Parser::parseConjunction() {
-    auto conjunction = std::make_shared<Conjunction>();
+std::unique_ptr<Conjunction> Parser::parseConjunction() {
+    auto conjunction = std::make_unique<Conjunction>();
     switch(nextToken) {
         case NOT:
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            conjunction->a = *parseNegation();
+            conjunction->a = parseNegation();
             if(nextToken == AND) {
                 nextToken = scanner->getNextToken();
                 conjunction->b = parseConjunction();
@@ -55,19 +55,19 @@ std::shared_ptr<Conjunction> Parser::parseConjunction() {
     return conjunction;
 }
 
-std::shared_ptr<Negation> Parser::parseNegation() {
-    auto negation = std::make_shared<Negation>();
+std::unique_ptr<Negation> Parser::parseNegation() {
+    auto negation = std::make_unique<Negation>();
     switch(nextToken) {
         case NOT:
             negation->isActuallyNegation = true;
             nextToken = scanner->getNextToken();
-            negation->a = *parseComparison();
+            negation->a = parseComparison();
             break;
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
             negation->isActuallyNegation = false;
-            negation->a = *parseComparison();
+            negation->a = parseComparison();
             break;
         default:
             throw std::runtime_error("Unexpected token");
@@ -75,8 +75,8 @@ std::shared_ptr<Negation> Parser::parseNegation() {
     return negation;
 }
 
-std::shared_ptr<Comparison> Parser::parseComparison() {
-    auto comparison = std::make_shared<Comparison>();
+std::unique_ptr<Comparison> Parser::parseComparison() {
+    auto comparison = std::make_unique<Comparison>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
@@ -89,7 +89,28 @@ std::shared_ptr<Comparison> Parser::parseComparison() {
                 case GREATER_THAN:
                 case EQUAL:
                 case NOT_EQUAL:
-                    comparison->op = nextToken;
+                    switch(nextToken) {
+                        case LESS_EQUAL:
+                            comparison->op = Comparison::LESS_EQUAL;
+                            break;
+                        case LESS_THAN:
+                            comparison->op = Comparison::LESS_THAN;
+                            break;
+                        case GREATER_EQUAL:
+                            comparison->op = Comparison::GREATER_EQUAL;
+                            break;
+                        case GREATER_THAN:
+                            comparison->op = Comparison::GREATER_THAN;
+                            break;
+                        case EQUAL:
+                            comparison->op = Comparison::EQUAL;
+                            break;
+                        case NOT_EQUAL:
+                            comparison->op = Comparison::NOT_EQUAL;
+                            break;
+                        default:
+                            break;
+                    }
                     nextToken = scanner->getNextToken();
                     comparison->b = parseLogicalOperand();
                     break;
@@ -103,27 +124,27 @@ std::shared_ptr<Comparison> Parser::parseComparison() {
     return comparison;
 }
 
-std::shared_ptr<Expression> Parser::parseLogicalOperand() {
-    auto numericExpression = std::make_shared<NumericExpression>();
-    auto value = std::make_shared<IntValue>();
+std::unique_ptr<Expression> Parser::parseLogicalOperand() {
+    auto numericExpression = std::make_unique<NumericExpression>();
+    auto value = std::make_unique<IntValue>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            numericExpression->a = *parseNumericExpression();
+            numericExpression->a = parseNumericExpression();
             return numericExpression;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-std::shared_ptr<Addition> Parser::parseNumericExpression() {
-    auto expression = std::make_shared<Addition>();
+std::unique_ptr<Addition> Parser::parseNumericExpression() {
+    auto expression = std::make_unique<Addition>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            expression->a = *parseMultiplication();
+            expression->a = parseMultiplication();
             if(nextToken == ADD) {
                 nextToken = scanner->getNextToken();
                 expression->isSubtraction = false;
@@ -141,18 +162,30 @@ std::shared_ptr<Addition> Parser::parseNumericExpression() {
     return expression;
 }
 
-std::shared_ptr<Multiplication> Parser::parseMultiplication() {
-    auto multiplication = std::make_shared<Multiplication>();
+std::unique_ptr<Multiplication> Parser::parseMultiplication() {
+    auto multiplication = std::make_unique<Multiplication>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:
-            multiplication->a = *parsePowerRaising();
+            multiplication->a = parsePowerRaising();
             switch(nextToken) {
                 case MULTIPLY:
                 case DIVIDE:
                 case MODULO:
-                    multiplication->type = nextToken;
+                    switch(nextToken) {
+                        case MULTIPLY:
+                            multiplication->type = Multiplication::MULTIPLY;
+                            break;
+                        case DIVIDE:
+                            multiplication->type = Multiplication::DIVIDE;
+                            break;
+                        case MODULO:
+                            multiplication->type = Multiplication::MODULO;
+                            break;
+                        default:
+                            break;
+                    }
                     nextToken = scanner->getNextToken();
                     multiplication->b = parseMultiplication();
                     break;
@@ -166,8 +199,8 @@ std::shared_ptr<Multiplication> Parser::parseMultiplication() {
     return multiplication;
 }
 
-std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
-    auto power = std::make_shared<PowerRaising>();
+std::unique_ptr<PowerRaising> Parser::parsePowerRaising() {
+    auto power = std::make_unique<PowerRaising>();
     switch(nextToken) {
         case BRACE_OPEN:
         case INT_VALUE:
@@ -184,10 +217,10 @@ std::shared_ptr<PowerRaising> Parser::parsePowerRaising() {
     return power;
 }
 
-std::shared_ptr<Expression> Parser::parseNumericOperand() {
-    auto intValue = std::make_shared<IntValue>();
-    auto funcCall = std::make_shared<FunctionCall>();
-    auto expression = std::make_shared<LogicalExpression>();
+std::unique_ptr<Expression> Parser::parseNumericOperand() {
+    auto intValue = std::make_unique<IntValue>();
+    auto funcCall = std::make_unique<FunctionCall>();
+    auto expression = std::make_unique<LogicalExpression>();
     switch(nextToken) {
         case BRACE_OPEN:
             nextToken = scanner->getNextToken();
@@ -196,7 +229,7 @@ std::shared_ptr<Expression> Parser::parseNumericOperand() {
             nextToken = scanner->getNextToken();
             return expression;
         case INT_VALUE:
-            intValue->value = nextToken;
+            intValue->value = nextToken.getInt();
             nextToken = scanner->getNextToken();
             return intValue;
         case IDENTIFIER:

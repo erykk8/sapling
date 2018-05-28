@@ -17,7 +17,7 @@ class InputReader {
 
 class StreamReader: public InputReader {
     public:
-        StreamReader(std::shared_ptr<std::istream> stream) : stream(stream), line(0), position(0) {}
+        StreamReader(std::shared_ptr<std::istream> stream);
         int nextChar();
         int peekChar();
         void skipLine();

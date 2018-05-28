@@ -12,14 +12,13 @@ int main(int argc, char** argv) {
         std::cout << "Usage: " << argv[0] << " file" << std::endl;
         return 1;
     }
-    auto file = std::make_shared<std::ifstream>();
-    file->open(argv[1]);
-    if(*file) {
-        auto sr = std::make_shared<StreamReader>(file);
-        auto s = std::make_shared<Scanner>(sr);
-        Parser p(s);
-        std::cout << p.evaluate() << std::endl;
-        file->close();
+    auto file = std::make_shared<std::ifstream>(argv[1]);
+    if(file) {
+        auto sr = std::make_unique<StreamReader>(file);
+        auto s = std::make_unique<Scanner>(std::move(sr));
+        Parser p(std::move(s));
+        auto program = p.parse();
+        std::cout << program->evaluate() << std::endl;
         return 0;
     }
     std::cout << "Could not read file" << std::endl;

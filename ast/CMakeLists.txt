@@ -8,7 +8,6 @@ target_sources(AST
         "${CMAKE_CURRENT_LIST_DIR}/Program.h"
         "${CMAKE_CURRENT_LIST_DIR}/Function.h"
         "${CMAKE_CURRENT_LIST_DIR}/Expression.h"
-        "${CMAKE_CURRENT_LIST_DIR}/Parameter.h"
         "${CMAKE_CURRENT_LIST_DIR}/IfBlock.h"
 )
 

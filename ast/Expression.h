@@ -5,93 +5,110 @@
 struct Scope;
 
 struct Expression {
-    virtual int evaluate(std::shared_ptr<Scope> scope) = 0;
+    virtual int evaluate(const Scope& scope) const = 0;
 };
 
 struct IntValue : public Expression {
-    Token value;
-    int evaluate(std::shared_ptr<Scope> scope);
+    int value;
+    int evaluate(const Scope& scope) const;
+
+    IntValue(int value = 0);
+    ~IntValue() = default;
 };
 
 struct PowerRaising : public Expression {
-    std::shared_ptr<Expression> base;
-    std::shared_ptr<PowerRaising> power;
+    std::unique_ptr<Expression> base;
+    std::unique_ptr<PowerRaising> power;
 
     PowerRaising(int base = 1);
-    ~PowerRaising() {}
+    ~PowerRaising() = default;
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate(const Scope& scope) const;
 };
 
 struct Multiplication : public Expression {
-    PowerRaising a;
-    std::shared_ptr<Multiplication> b;
-    TokenType::Type type;
+    std::unique_ptr<PowerRaising> a;
+    std::unique_ptr<Multiplication> b;
+
+    enum Type {
+        MULTIPLY, DIVIDE, MODULO
+    };
+
+    Type type;
 
     Multiplication(int a = 1);
-    ~Multiplication() {}
+    ~Multiplication() = default;
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate(const Scope& scope) const;
 };
 
 struct Addition : public Expression {
-    Multiplication a;
-    std::shared_ptr<Addition> b;
+    std::unique_ptr<Multiplication> a;
+    std::unique_ptr<Addition> b;
     bool isSubtraction;
 
     Addition(int a = 0);
-    ~Addition() {}
+    ~Addition() = default;
 
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate(const Scope& scope) const;
 };
 
 struct NumericExpression : public Expression {
-    Addition a;
-    int evaluate(std::shared_ptr<Scope> scope);
+    std::unique_ptr<Addition> a;
+    int evaluate(const Scope& scope) const;
+
+    NumericExpression();
+    ~NumericExpression() = default;
 };
 
 struct Comparison : public Expression {
-    std::shared_ptr<Expression> a;
-    std::shared_ptr<Expression> b;
+    std::unique_ptr<Expression> a;
+    std::unique_ptr<Expression> b;
 
-    TokenType::Type op;
+    enum Type {
+        LESS_THAN, GREATER_THAN,
+        LESS_EQUAL, GREATER_EQUAL,
+        EQUAL, NOT_EQUAL
+    };
+
+    Type op;
 
     Comparison();
-    ~Comparison() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    ~Comparison() = default;
+    int evaluate(const Scope& scope) const;
 };
 
 struct Negation : public Expression {
-    Comparison a;
+    std::unique_ptr<Comparison> a;
     bool isActuallyNegation;
 
     Negation();
-    ~Negation() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    ~Negation() = default;
+    int evaluate(const Scope& scope) const;
 };
 
 struct Conjunction : public Expression {
-    Negation a;
-    std::shared_ptr<Conjunction> b;
+    std::unique_ptr<Negation> a;
+    std::unique_ptr<Conjunction> b;
 
     Conjunction();
-    ~Conjunction() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    ~Conjunction() = default;
+    int evaluate(const Scope& scope) const;
 };
 
 struct Disjunction : public Expression {
-    Conjunction a;
-    std::shared_ptr<Disjunction> b;
+    std::unique_ptr<Conjunction> a;
+    std::unique_ptr<Disjunction> b;
     
     Disjunction();
-    ~Disjunction() {}
-    int evaluate(std::shared_ptr<Scope> scope);
+    ~Disjunction() = default;
+    int evaluate(const Scope& scope) const;
 };
 
-class LogicalExpression : public Expression {
-    public:
-        Disjunction a;
-        int evaluate(std::shared_ptr<Scope> scope);
-        bool wasEvaluated = false;
-        int value;
+struct LogicalExpression : public Expression {
+    std::unique_ptr<Disjunction> a;
+    int evaluate(const Scope& scope) const;
+
+    LogicalExpression();
+    ~LogicalExpression() = default;
 };

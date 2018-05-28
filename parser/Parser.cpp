@@ -1,12 +1,14 @@
 #include "Parser.h"
 #include <iostream>
 
-Parser::Parser(std::shared_ptr<Scanner> s) : scanner(s) {
-    program = std::make_shared<Program>();
+Parser::Parser(std::unique_ptr<Scanner> s) {
+    scanner = std::move(s);
+    program = nullptr;
 }
 
-void Parser::parse() {
+std::unique_ptr<Program> Parser::parse() {
     try {
+        program = std::make_unique<Program>();
         parseProgram();
     }
     catch (std::runtime_error e) {
@@ -14,8 +16,5 @@ void Parser::parse() {
         std::cout << " at position " << nextToken.getPosition() << std::endl;
         throw std::runtime_error("Parsing error");
     }
-}
-int Parser::evaluate() {
-    parse();
-    return program->evaluate();
+    return std::move(program);
 }

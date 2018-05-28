@@ -2,12 +2,12 @@
 
 using namespace TokenType;
 
-std::shared_ptr<IfBlock> Parser::parseIfBlock() {
-    auto ifBlock = std::make_shared<IfBlock>();
+std::unique_ptr<IfBlock> Parser::parseIfBlock() {
+    auto ifBlock = std::make_unique<IfBlock>();
     switch(nextToken) {
         case IF:       
             ifBlock->ifClause = parseIfClause();
-            while(nextToken == ELIF) ifBlock->elifClauses.push_back(parseElifClauses());
+            while(nextToken == ELIF) ifBlock->elifClauses.push_back(std::move(parseElifClause()));
             ifBlock->elseClause = parseElseClause();
             break;
         default:
@@ -16,46 +16,46 @@ std::shared_ptr<IfBlock> Parser::parseIfBlock() {
     return ifBlock;
 }
 
-ConditionalClause Parser::parseIfClause() {
-    ConditionalClause clause;
+std::unique_ptr<ConditionalClause> Parser::parseIfClause() {
+    auto clause = std::make_unique<ConditionalClause>();
     switch(nextToken) {
         case IF:
             nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            clause.condition.a = *parseLogicalExpression();
+            clause->condition = std::move(parseLogicalExpression());
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            clause.body = parseFunctionBodyBlock();
+            clause->body = std::move(parseFunctionBodyBlock());
             return clause;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-ConditionalClause Parser::parseElifClauses() {
-    ConditionalClause clause;
+std::unique_ptr<ConditionalClause> Parser::parseElifClause() {
+    auto clause = std::make_unique<ConditionalClause>();
     switch(nextToken) {
         case ELIF:
             nextToken = scanner->getNextToken();
             if(nextToken != BRACE_OPEN) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            clause.condition.a = *parseLogicalExpression();
+            clause->condition = std::move(parseLogicalExpression());
             if(nextToken != BRACE_CLOSE) throw std::runtime_error("Unexpected token");
             nextToken = scanner->getNextToken();
-            clause.body = parseFunctionBodyBlock();
+            clause->body = std::move(parseFunctionBodyBlock());
             return clause;
         default:
             throw std::runtime_error("Unexpected token");
     }
 }
 
-ConditionalClause Parser::parseElseClause() {
-    ConditionalClause clause;
+std::unique_ptr<ConditionalClause> Parser::parseElseClause() {
+    auto clause = std::make_unique<ConditionalClause>();
     switch(nextToken) {
         case ELSE:
             nextToken = scanner->getNextToken();
-            clause.body = parseFunctionBodyBlock();
+            clause->body = std::move(parseFunctionBodyBlock());
             return clause;
         default:
             throw std::runtime_error("Unexpected token");

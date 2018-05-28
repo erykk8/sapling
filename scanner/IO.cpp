@@ -3,6 +3,9 @@
 #include <limits>
 #include <ios>
 
+StreamReader::StreamReader(std::shared_ptr<std::istream> stream) : stream(stream), line(0), position(0) {
+}
+
 int StreamReader::nextChar() {
     char c;
     if(stream->get(c)) {

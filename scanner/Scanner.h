@@ -6,7 +6,7 @@
 
 class Scanner {
     public:
-        Scanner(std::shared_ptr<InputReader> reader);
+        Scanner(std::unique_ptr<InputReader> reader);
         Token getNextToken();
     private:
         static std::function<bool(int)> whiteSpace;
@@ -28,5 +28,5 @@ class Scanner {
         void throwInvalidString();
 
         Token currentToken;
-        std::shared_ptr<InputReader> reader;
+        std::unique_ptr<InputReader> reader;
 };

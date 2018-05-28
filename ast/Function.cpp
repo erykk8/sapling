@@ -2,26 +2,40 @@
 #include <iostream>
 #include <memory>
 
-int InstructionBlock::evaluate(std::shared_ptr<Scope> scope) {
+int InstructionBlock::evaluate(const Scope& scope) const {
     return returnExpression->evaluate(scope);
 }
 
-int FunctionCall::evaluate(std::shared_ptr<Scope> scope) {
-    auto newScope = std::make_shared<Scope>();
-    newScope->enclosingScope = scope;
-    newScope->functions = scope->functions;
-    newScope->parameters = parameters;
+int FunctionCall::evaluate(const Scope& scope) const {
+    auto newScope = std::make_unique<Scope>();
+    newScope->enclosingScope = &scope;
+    newScope->parameters = &parameters;
 
-    // evaluate parameters in the enclosing scope
-    auto it = scope->parameters.find(functionName);
-    if(it != scope->parameters.end()) {
-        return it->second->evaluate(scope->enclosingScope);
+    if(scope.parameters != nullptr) {
+        auto it = scope.parameters->find(functionName);
+        if(it != scope.parameters->end()) {
+            // evaluate parameters in the enclosing scope
+            return it->second->evaluate(*(scope.enclosingScope));
+        }
     }
+    
     // evaluate function bodies in the new scope, with new parameter values sets
-    auto it2 = scope->functions.find(functionName);
-    if(it2 != scope->functions.end()) {
-        return it2->second->body.evaluate(newScope);
-    }
+    const Function& function = scope.getFunction(functionName);
+    return function.body->evaluate(*newScope);
+}
 
-    throw std::runtime_error("Undefined reference to " + functionName);
+const Function& Scope::getFunction(std::string name) const {
+    auto it = functions.find(name);
+    if(it != functions.end()) {
+        return *(it->second);
+    }
+    auto scope = enclosingScope;
+    while(scope != nullptr) {
+        it = scope->functions.find(name);
+        if(it != scope->functions.end()) {
+            return *(it->second);
+        }
+        scope = scope->enclosingScope;
+    }
+    throw std::runtime_error("Undefined reference to " + name);
 }

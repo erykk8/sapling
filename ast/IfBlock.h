@@ -4,16 +4,17 @@
 #include "Expression.h"
 #include "Function.h"
 #include <vector>
+#include <memory>
 
 struct ConditionalClause {
-    LogicalExpression condition;
-    InstructionBlock body;
+    std::unique_ptr<Expression> condition;
+    std::unique_ptr<InstructionBlock> body;
 };
 
 struct IfBlock : public Expression {
-    int evaluate(std::shared_ptr<Scope> scope);
+    int evaluate(const Scope& scope) const;
 
-    ConditionalClause ifClause;
-    std::vector<ConditionalClause> elifClauses;
-    ConditionalClause elseClause;
+    std::unique_ptr<ConditionalClause> ifClause;
+    std::vector<std::unique_ptr<ConditionalClause>> elifClauses;
+    std::unique_ptr<ConditionalClause> elseClause;
 };

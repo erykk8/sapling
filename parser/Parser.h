@@ -4,53 +4,52 @@
 #include "../ast/Program.h"
 #include "../ast/Function.h"
 #include "../ast/IfBlock.h"
-#include "../ast/Parameter.h"
 
 #include <vector>
 #include <memory>
 
 class Parser {
     public:
-        void parse();
-        int evaluate();
-        Parser(std::shared_ptr<Scanner> s);
+        std::unique_ptr<Program> parse();
+        Parser(std::unique_ptr<Scanner> s);
         ~Parser() = default;
     private:
-        std::shared_ptr<Scanner> scanner;
+        typedef std::pair<std::string, std::shared_ptr<Expression>> parameter;
+        std::unique_ptr<Scanner> scanner;
         Token nextToken;
-        std::shared_ptr<Program> program;
+        std::unique_ptr<Program> program;
 
         // Program.cpp
         void parseProgram();
 
         // Function.cpp
-        std::shared_ptr<Function> parseFunctionDeclaration();
-        std::shared_ptr<FunctionCall> parseFunctionCall();
-        InstructionBlock parseFunctionBodyBlock();
-        std::vector<Parameter> parseParameterDeclaration();
-        std::vector<std::shared_ptr<Expression>> parseParameterCall();
-        std::vector<Parameter> parseArgList();
-        std::vector<std::shared_ptr<Expression>> parseValueList();
+        void parseFunctionDeclaration();
+        std::unique_ptr<FunctionCall> parseFunctionCall();
+        std::unique_ptr<InstructionBlock> parseFunctionBodyBlock();
+        std::vector<std::string> parseParameterDeclaration();
+        std::vector<std::unique_ptr<Expression>> parseParameterCall();
+        std::vector<std::string> parseArgList();
+        std::vector<std::unique_ptr<Expression>> parseValueList();
 
         // Instruction.cpp
-        InstructionBlock parseInstructionBlock();
-        std::shared_ptr<Expression> parseValueBlock();
+        std::unique_ptr<InstructionBlock> parseInstructionBlock();
+        std::unique_ptr<Expression> parseValueBlock();
 
         // ValueExpression.cpp
-        std::shared_ptr<LogicalExpression> parseValueExpression();
-        std::shared_ptr<Disjunction> parseLogicalExpression();
-        std::shared_ptr<Conjunction> parseConjunction();
-        std::shared_ptr<Negation> parseNegation();
-        std::shared_ptr<Comparison> parseComparison();
-        std::shared_ptr<Expression> parseLogicalOperand();
-        std::shared_ptr<Addition> parseNumericExpression();
-        std::shared_ptr<Multiplication> parseMultiplication();
-        std::shared_ptr<PowerRaising> parsePowerRaising();
-        std::shared_ptr<Expression> parseNumericOperand();
+        std::unique_ptr<LogicalExpression> parseValueExpression();
+        std::unique_ptr<Disjunction> parseLogicalExpression();
+        std::unique_ptr<Conjunction> parseConjunction();
+        std::unique_ptr<Negation> parseNegation();
+        std::unique_ptr<Comparison> parseComparison();
+        std::unique_ptr<Expression> parseLogicalOperand();
+        std::unique_ptr<Addition> parseNumericExpression();
+        std::unique_ptr<Multiplication> parseMultiplication();
+        std::unique_ptr<PowerRaising> parsePowerRaising();
+        std::unique_ptr<Expression> parseNumericOperand();
         
         // IfBlock.cpp
-        std::shared_ptr<IfBlock> parseIfBlock();
-        ConditionalClause parseIfClause();
-        ConditionalClause parseElifClauses();
-        ConditionalClause parseElseClause();
+        std::unique_ptr<IfBlock> parseIfBlock();
+        std::unique_ptr<ConditionalClause> parseIfClause();
+        std::unique_ptr<ConditionalClause> parseElifClause();
+        std::unique_ptr<ConditionalClause> parseElseClause();
 };

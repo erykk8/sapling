@@ -10,6 +10,7 @@ foreach(testSrc ${TEST_SRCS})
 
         add_executable(${testName} ${testSrc})
 
+        target_compile_definitions(${testName} PRIVATE EXAMPLES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/examples/" SAPLING_PATH="${CMAKE_CURRENT_SOURCE_DIR}/Sapling")
         target_link_libraries(${testName} ${Boost_LIBRARIES} AST Parser Token Scanner)
 
         set_target_properties(${testName} PROPERTIES 

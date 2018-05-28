@@ -6,6 +6,6 @@
 struct Program {
     Program();
     ~Program() = default;
-    std::shared_ptr<Scope> scope;
-    int evaluate();
+    std::unique_ptr<Scope> scope;
+    int evaluate() const;
 };

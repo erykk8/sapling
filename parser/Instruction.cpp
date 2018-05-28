@@ -2,25 +2,24 @@
 
 using namespace TokenType;
 
-InstructionBlock Parser::parseInstructionBlock() {
-    InstructionBlock instructions;
+std::unique_ptr<InstructionBlock> Parser::parseInstructionBlock() {
+    auto instructions = std::make_unique<InstructionBlock>();
     switch(nextToken) {
         case IF:
         case NOT:
         case BRACE_OPEN:
         case INT_VALUE:
         case IDENTIFIER:        
-            instructions.returnExpression = parseValueBlock();
+            instructions->returnExpression = parseValueBlock();
             break;
         case LET:
             while(nextToken == LET) {
-                auto function = parseFunctionDeclaration();
-                program->scope->functions[function->identifier] = function;
+                parseFunctionDeclaration(); // adds to global scope for now
             }
-            if(nextToken != RETURN) instructions.returnExpression = parseValueBlock();
+            if(nextToken != RETURN) instructions->returnExpression = parseValueBlock();
         case RETURN:
             nextToken = scanner->getNextToken();
-            instructions.returnExpression = parseValueBlock();
+            instructions->returnExpression = parseValueBlock();
             break;
         default:
             throw std::runtime_error("Unexpected token");
@@ -28,8 +27,8 @@ InstructionBlock Parser::parseInstructionBlock() {
     return instructions;
 }
 
-std::shared_ptr<Expression> Parser::parseValueBlock() {
-    std::shared_ptr<Expression> expression;
+std::unique_ptr<Expression> Parser::parseValueBlock() {
+    std::unique_ptr<Expression> expression;
     switch(nextToken) {
         case IF:
             expression = parseIfBlock();

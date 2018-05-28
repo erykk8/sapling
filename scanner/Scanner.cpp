@@ -1,7 +1,9 @@
 #include "Scanner.h"
 #include <sstream>
 
-Scanner::Scanner(std::shared_ptr<InputReader> reader) : reader(reader) {}
+Scanner::Scanner(std::unique_ptr<InputReader> reader) {
+    this->reader = std::move(reader);
+}
 
 Token Scanner::getNextToken() {
     readNextToken();
