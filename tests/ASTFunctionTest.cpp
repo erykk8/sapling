@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE(if_else_block) {
     i.ifClause->body = std::make_unique<InstructionBlock>();
     i.ifClause->body->returnExpression = std::make_unique<IntValue>(42);
 
+    i.elseClause = std::make_unique<ConditionalClause>();
     i.elseClause->body = std::make_unique<InstructionBlock>();
     i.elseClause->body->returnExpression = std::make_unique<IntValue>(33);
 
@@ -57,10 +58,47 @@ BOOST_AUTO_TEST_CASE(if_elif_else_block) {
     i.elifClauses[1]->body = std::make_unique<InstructionBlock>();
     i.elifClauses[1]->body->returnExpression = std::make_unique<IntValue>(72);
 
+    i.elseClause = std::make_unique<ConditionalClause>();
     i.elseClause->body = std::make_unique<InstructionBlock>();
     i.elseClause->body->returnExpression = std::make_unique<IntValue>(33);
 
     BOOST_CHECK_EQUAL(i.evaluate(s), 72);
+}
+
+BOOST_AUTO_TEST_CASE(function_call_simple) {
+    Scope s;
+    auto f = std::make_unique<Function>();
+    f->identifier = "func";
+    f->body = std::make_unique<InstructionBlock>();
+    f->body->returnExpression = std::make_unique<IntValue>(42);
+
+    s.functions["func"] = std::move(f);
+
+    FunctionCall fc;
+    fc.functionName = "func";
+    
+    BOOST_CHECK_EQUAL(fc.evaluate(s), 42);
+}
+
+BOOST_AUTO_TEST_CASE(function_call_parameter) {
+    Scope s;
+    auto f = std::make_unique<Function>();
+    f->identifier = "func";
+    f->parameters.push_back("a");
+    f->body = std::make_unique<InstructionBlock>();
+
+    auto nestedFc = std::make_unique<FunctionCall>();
+    nestedFc->functionName = "a";
+
+    f->body->returnExpression = std::move(nestedFc);
+
+    FunctionCall fc;
+    fc.functionName = "func";
+    fc.parameters["a"] = std::make_unique<IntValue>(9);
+
+    s.functions["func"] = std::move(f);
+
+    BOOST_CHECK_EQUAL(fc.evaluate(s), 9);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
